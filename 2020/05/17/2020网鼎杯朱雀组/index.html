@@ -8,21 +8,21 @@
   <link rel="dns-prefetch" href="http://Ronpa.top">
   <title>2020网鼎杯朱雀组 | Ronpa的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="跟进主函数,大致流程是把输入的flag转成四位的二进制,然后经过加密变化最后和硬编码做对比.比较函数,和ybjfjgnfcshjvfkk对比:glockflag是关键的内置的二叉树,根据输入的二进制最后得到编码 1234567891011121314151617do  &amp;#123;    if ( glockflag[v5] == &apos;0&apos; )                     &amp;#123;">
+  <meta name="description" content="打着玩儿 比较无脑">
 <meta name="keywords" content="writeup">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2020网鼎杯朱雀组">
 <meta property="og:url" content="http://Ronpa.top/2020/05/17/2020网鼎杯朱雀组/index.html">
 <meta property="og:site_name" content="Ronpa的博客">
-<meta property="og:description" content="跟进主函数,大致流程是把输入的flag转成四位的二进制,然后经过加密变化最后和硬编码做对比.比较函数,和ybjfjgnfcshjvfkk对比:glockflag是关键的内置的二叉树,根据输入的二进制最后得到编码 1234567891011121314151617do  &amp;#123;    if ( glockflag[v5] == &apos;0&apos; )                     &amp;#123;">
+<meta property="og:description" content="打着玩儿 比较无脑">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://ronpa.top/2020/05/17/2020网鼎杯朱雀组/1-2.png">
 <meta property="og:image" content="http://ronpa.top/2020/05/17/2020网鼎杯朱雀组/1-3.png">
 <meta property="og:image" content="http://ronpa.top/2020/05/17/2020网鼎杯朱雀组/1-4.png">
-<meta property="og:updated_time" content="2020-05-17T09:18:11.000Z">
+<meta property="og:updated_time" content="2020-09-29T12:41:37.792Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2020网鼎杯朱雀组">
-<meta name="twitter:description" content="跟进主函数,大致流程是把输入的flag转成四位的二进制,然后经过加密变化最后和硬编码做对比.比较函数,和ybjfjgnfcshjvfkk对比:glockflag是关键的内置的二叉树,根据输入的二进制最后得到编码 1234567891011121314151617do  &amp;#123;    if ( glockflag[v5] == &apos;0&apos; )                     &amp;#123;">
+<meta name="twitter:description" content="打着玩儿 比较无脑">
 <meta name="twitter:image" content="http://ronpa.top/2020/05/17/2020网鼎杯朱雀组/1-2.png">
   
     <link rel="alternative" href="/atom.xml" title="Ronpa的博客" type="application/atom+xml">
@@ -181,7 +181,11 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>跟进主函数,大致流程是把输入的flag转成四位的二进制,然后经过加密变化最后和硬编码做对比.<br><img src="/2020/05/17/2020网鼎杯朱雀组/1-2.png" alt><br>比较函数,和<code>ybjfjgnfcshjvfkk</code>对比:<br><img src="/2020/05/17/2020网鼎杯朱雀组/1-3.png" alt><br><code>glockflag</code>是关键的内置的二叉树,根据输入的二进制最后得到编码</p>
+        <blockquote>
+<p>打着玩儿 比较无脑</p>
+</blockquote>
+<a id="more"></a>
+<p>跟进主函数,大致流程是把输入的flag转成四位的二进制,然后经过加密变化最后和硬编码做对比.<br><img src="/2020/05/17/2020网鼎杯朱雀组/1-2.png" alt><br>比较函数,和<code>ybjfjgnfcshjvfkk</code>对比:<br><img src="/2020/05/17/2020网鼎杯朱雀组/1-3.png" alt><br><code>glockflag</code>是关键的内置的二叉树,根据输入的二进制最后得到编码</p>
 <figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">do</span><br><span class="line">  &#123;</span><br><span class="line">   <span class="built_in"> if </span>( glockflag[v5] == '0' )                 </span><br><span class="line">    &#123;</span><br><span class="line">      v3 = *(v3 + 0xC);</span><br><span class="line">    &#125;</span><br><span class="line">    else<span class="built_in"> if </span>( glockflag[v5] == '1' )           </span><br><span class="line">    &#123;</span><br><span class="line">      v3 = *(v3 + 0x10);</span><br><span class="line">    &#125;</span><br><span class="line">    ++v5;</span><br><span class="line">   <span class="built_in"> if </span>( *v3 &gt; 96 &amp;&amp; *v3 &lt;= 122 )</span><br><span class="line">    &#123;</span><br><span class="line">      Str2[v4++] = *v3;</span><br><span class="line">      v3 = a1;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 <p>动态调试就能得到树的结构,最后共26个叶,对应26个字母.</p>
 <p>对应关系:</p>
@@ -429,11 +433,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">IOT</a>
+                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
+                <a href="javascript:void(0)" class="js-tag color4">IOT</a>
               </li>
              
               <li class="article-tag-list-item">

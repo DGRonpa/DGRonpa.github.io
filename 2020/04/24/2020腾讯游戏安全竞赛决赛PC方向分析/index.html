@@ -8,21 +8,21 @@
   <link rel="dns-prefetch" href="http://Ronpa.top">
   <title>2020腾讯游戏安全竞赛决赛PC方向分析 | Ronpa的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="毕设摸鱼 emmmmm试一试能不能把决赛的ring3给做了 ring0放弃 驱动不会  要求winmine.exe是一个扫雷游戏程序，winmine.dmp是该程序的一份进程dump, 在这份dump中，有一个DLL作弊程序。  请找到该作弊程序，给出模块名；（1分） 并分析它所包含的4个作弊功能，给出实现作弊功能的函数的偏移，并说明其作弊功能是什么。（4分）  https://bbs.pedi">
+  <meta name="description" content="毕设摸鱼 emmmmm试一试能不能把决赛的ring3给做了 ring0放弃 驱动不会">
 <meta name="keywords" content="writeup">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2020腾讯游戏安全竞赛决赛PC方向分析">
 <meta property="og:url" content="http://Ronpa.top/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/index.html">
 <meta property="og:site_name" content="Ronpa的博客">
-<meta property="og:description" content="毕设摸鱼 emmmmm试一试能不能把决赛的ring3给做了 ring0放弃 驱动不会  要求winmine.exe是一个扫雷游戏程序，winmine.dmp是该程序的一份进程dump, 在这份dump中，有一个DLL作弊程序。  请找到该作弊程序，给出模块名；（1分） 并分析它所包含的4个作弊功能，给出实现作弊功能的函数的偏移，并说明其作弊功能是什么。（4分）  https://bbs.pedi">
+<meta property="og:description" content="毕设摸鱼 emmmmm试一试能不能把决赛的ring3给做了 ring0放弃 驱动不会">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://ronpa.top/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/1-1.png">
 <meta property="og:image" content="http://ronpa.top/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/1-2.png">
 <meta property="og:image" content="http://ronpa.top/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/1-3.png">
-<meta property="og:updated_time" content="2020-05-05T16:25:01.000Z">
+<meta property="og:updated_time" content="2020-09-29T12:42:07.623Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2020腾讯游戏安全竞赛决赛PC方向分析">
-<meta name="twitter:description" content="毕设摸鱼 emmmmm试一试能不能把决赛的ring3给做了 ring0放弃 驱动不会  要求winmine.exe是一个扫雷游戏程序，winmine.dmp是该程序的一份进程dump, 在这份dump中，有一个DLL作弊程序。  请找到该作弊程序，给出模块名；（1分） 并分析它所包含的4个作弊功能，给出实现作弊功能的函数的偏移，并说明其作弊功能是什么。（4分）  https://bbs.pedi">
+<meta name="twitter:description" content="毕设摸鱼 emmmmm试一试能不能把决赛的ring3给做了 ring0放弃 驱动不会">
 <meta name="twitter:image" content="http://ronpa.top/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/1-1.png">
   
     <link rel="alternative" href="/atom.xml" title="Ronpa的博客" type="application/atom+xml">
@@ -184,6 +184,7 @@
         <blockquote>
 <p>毕设摸鱼 emmmmm试一试能不能把决赛的ring3给做了 ring0放弃 驱动不会</p>
 </blockquote>
+<a id="more"></a>
 <h2 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h2><p>winmine.exe是一个扫雷游戏程序，winmine.dmp是该程序的一份进程dump, 在这份dump中，有一个DLL作弊程序。</p>
 <ol>
 <li>请找到该作弊程序，给出模块名；（1分）</li>
@@ -443,11 +444,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">IOT</a>
+                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
+                <a href="javascript:void(0)" class="js-tag color4">IOT</a>
               </li>
              
               <li class="article-tag-list-item">
