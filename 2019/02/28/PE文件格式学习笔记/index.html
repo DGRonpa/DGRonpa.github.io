@@ -9,7 +9,7 @@
   <title>PE文件格式/ IAT 学习笔记 | Ronpa的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="开了好久好久的坑 填上了/ 后续补写一些基础知识当做补缺/ 全是转载 不是原创/ PE; IAT">
-<meta name="keywords" content="随笔">
+<meta name="keywords" content="Sketches">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PE文件格式&#x2F; IAT 学习笔记">
 <meta property="og:url" content="http://Ronpa.top/2019/02/28/PE文件格式学习笔记/index.html">
@@ -20,7 +20,7 @@
 <meta property="og:image" content="http://ronpa.top/2019/02/28/PE文件格式学习笔记/PE映像.png">
 <meta property="og:image" content="http://ronpa.top/2019/02/28/PE文件格式学习笔记/raw.png">
 <meta property="og:image" content="http://ronpa.top/2019/02/28/PE文件格式学习笔记/raw2.png">
-<meta property="og:updated_time" content="2020-05-08T13:42:12.000Z">
+<meta property="og:updated_time" content="2021-02-15T21:53:07.274Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PE文件格式&#x2F; IAT 学习笔记">
 <meta name="twitter:description" content="开了好久好久的坑 填上了/ 后续补写一些基础知识当做补缺/ 全是转载 不是原创/ PE; IAT">
@@ -175,7 +175,7 @@
 
         
         <a href="/2019/02/28/PE文件格式学习笔记/" class="archive-article-date">
-  	<time datetime="2019-02-28T11:55:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-28</time>
+  	<time datetime="2019-02-28T19:55:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-28</time>
 </a>
         
       </header>
@@ -186,7 +186,7 @@
 <p>开了好久好久的坑 填上了/ 后续补写一些基础知识当做补缺/ 全是转载 不是原创/ PE; IAT</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="1-IAT-为什么脱壳后要修复IAT"><a href="#1-IAT-为什么脱壳后要修复IAT" class="headerlink" title="1. IAT (为什么脱壳后要修复IAT)"></a>1. IAT (为什么脱壳后要修复IAT)</h1><p>导入表= 输入表<br><br>IAT 导入地址表<br><br>INT 导入名称表<br></p>
+<h1 id="1-IAT-为什么脱壳后要修复IAT"><a href="#1-IAT-为什么脱壳后要修复IAT" class="headerlink" title="1. IAT (为什么脱壳后要修复IAT)"></a>1. IAT (为什么脱壳后要修复IAT)</h1><p>导入表= 输入表(IT import table, 内置结构是IID: IMAGE_IMPORT_DESCRIPTOR 一个dll对应一个导入表)<br><br>IAT 导入地址表<br><br>INT 导入名称表<br></p>
 <p><a href="https://bbs.pediy.com/thread-151939.htm" target="_blank" rel="noopener">原帖</a></p>
 <h2 id="1-1-程序调用DLL导出函数的原理"><a href="#1-1-程序调用DLL导出函数的原理" class="headerlink" title="1.1 程序调用DLL导出函数的原理"></a>1.1 程序调用DLL导出函数的原理</h2><p>PE调用DLL里的函数，一般是先加载这个DLL模块到它的进程地址空间，然后在加载后的地址范围内找到每个调用函数的地址，在程序中你可以使用<code>LoadLibrary()</code>这个系统API去动态去加载某个DLL，再通过<code>GetProcAddress()</code>系统API来找到DLL导出的某个函数地址，得到函数地址了你才能使用这个函数。<br>用户DLL被加载后的基址可发生变化，导入的函数地址不是固定的，你不能使用固定的地址。<br>系统DLL虽然基址固定，函数地址固定，但是一般不会直接使用函数硬地址，<br>还是要<code>GetProcAddress()</code>这个API来得到地址，因为XP、win7等每个系统的这些地址<br>是不一样的，会导致兼容性问题。</p>
 <p><strong>个人总结:</strong></p>
@@ -220,21 +220,27 @@
 <li>dump后程序不能正常运行很可能是导入表位置错误（也可能是程序有自校验），因为dump出来的只是内存中的映像快照，<strong>导入表目录还是指向壳的导入表</strong>，这时，需要用导入表修复软件查找dump出的PE文件<strong>原导入表首地址</strong>，然后修正导入表目录中导入表的位置，或重建导入表。(修复IAT)</li>
 <li><code>Import Fix</code>导入表修复软件会新建一个节来保存原导入表数据，并将导入表目录指向新节导入表位置。在搜索导入表时可能导入表被破坏，Import Fix会识别出一些无效的IAT项，可以将其剔除掉。 <strong>一般直接上OD插件修复IAT</strong></li>
 </ol>
-<h1 id="2-PE"><a href="#2-PE" class="headerlink" title="2. PE"></a>2. PE</h1><h2 id="2-1-PE文件格式"><a href="#2-1-PE文件格式" class="headerlink" title="2.1 PE文件格式"></a>2.1 PE文件格式</h2><p>PE(Portable Executable)指的是win上的可执行文件格式,<strong>是一个大类里面包括如exe、dll、vxd、sys和vdm等</strong>, win16平台上是 NE格式(遥远的过去完全没接触过), win32/64上是PE格式,是目前win上主流的可执行文件格式</p>
+<h1 id="2-PE的基本概念"><a href="#2-PE的基本概念" class="headerlink" title="2. PE的基本概念"></a>2. PE的基本概念</h1><p>PE(Portable Executable)指的是win上的可执行文件格式,<strong>是一个大类里面包括如exe、dll、vxd、sys和vdm等</strong>, win16平台上是 NE格式(遥远的过去完全没接触过), win32/64上是PE格式,是目前win上主流的可执行文件格式</p>
 <p><img src="/2019/02/28/PE文件格式学习笔记/PE映像.png" alt></p>
-<h2 id="2-2-三个部分"><a href="#2-2-三个部分" class="headerlink" title="2.2 三个部分"></a>2.2 三个部分</h2><p><code>.text</code> 代码段汇编</p>
+<p><code>.text</code> 代码段汇编</p>
 <p><code>.data</code> 数据段 左下角一堆</p>
 <p><code>.rsrc</code> 资源段 实实在在看到的界面 包括上面的东西logo 按钮 菜单</p>
-<h2 id="2-3-VirtualSize-amp-SizeOfRawData"><a href="#2-3-VirtualSize-amp-SizeOfRawData" class="headerlink" title="2.3 VirtualSize &amp; SizeOfRawData"></a>2.3 VirtualSize &amp; SizeOfRawData</h2><p><code>VirtualSize</code>        The total size of the section when loaded into memory. If this value is greater than SizeOfRawData, the section is zero-padded. This field is valid only for executable images and should be set to zero for object files.</p>
-<p><code>SizeOfRawData</code>      The size of the section (for object files) or the size of the initialized data on disk (for image files). For executable images, this must be a multiple of FileAlignment from the optional header. If this is less than VirtualSize, the remainder of the section is zero-filled. Because the SizeOfRawData field is rounded but the VirtualSize field is not, it is possible for SizeOfRawData to be greater than VirtualSize as well. When a section contains only uninitialized data, this field should be zero.</p>
-<p><code>VirtualSize</code>是节没有进行对齐处理前的实际大小在内存里,而<code>SizeOfRawData</code>是节在磁盘中所占空间的大小,也就是对齐后的大小。<br><img src="/2019/02/28/PE文件格式学习笔记/raw.png" alt><br><img src="/2019/02/28/PE文件格式学习笔记/raw2.png" alt></p>
-<h2 id="2-4-RVA-相对虚拟地址"><a href="#2-4-RVA-相对虚拟地址" class="headerlink" title="2.4 RVA 相对虚拟地址"></a>2.4 RVA 相对虚拟地址</h2><p>有时候需要指定内存中的地址 引用全局变量</p>
-<p>相对于PE文件载入地址的偏移位置 </p>
-<p>目标地址0x401000 -载入地址 0x400000= 0x1000</p>
+<h2 id="2-1-基地址"><a href="#2-1-基地址" class="headerlink" title="2.1 基地址"></a>2.1 基地址</h2><p>ImageBase, 由PE文件自己设置的, 默认用VC++ 生成的<code>EXE</code>文件基地址是 <code>400000h</code>, <code>DLL</code>是<code>10000000h</code>, 可以改变.</p>
+<p><strong>QUESTION?</strong> (也就是说是固定的了? 但问题是这是在内存里的地址, 内存的地址又不是只有一个exe或者dll).<br><strong>ANSWER</strong> (基地址+相对虚拟地址(RVA)=内存里的真正开始地址)</p>
+<h2 id="2-3-虚拟地址-Virtual-Address-VA"><a href="#2-3-虚拟地址-Virtual-Address-VA" class="headerlink" title="2.3 虚拟地址 Virtual Address(VA)"></a>2.3 虚拟地址 Virtual Address(VA)</h2><h3 id="2-3-1-虚拟地址-Virtual-Address-VA"><a href="#2-3-1-虚拟地址-Virtual-Address-VA" class="headerlink" title="2.3.1 虚拟地址 Virtual Address(VA)"></a>2.3.1 虚拟地址 Virtual Address(VA)</h3><p>内存中程序真正的地址, 由磁盘文件里的各块映射而来, 顺序分布相同, 但是间隔可能不同.</p>
 <p>虚拟地址(VA)=基地址(imagebase)+相对虚拟地址(RVA)</p>
-<h2 id="2-5-文件偏移"><a href="#2-5-文件偏移" class="headerlink" title="2.5 文件偏移"></a>2.5 文件偏移</h2><p>当PE文件存在磁盘中的时候 某个数据相对于文件头的偏移量为<strong>文件偏移地址</strong> 或 <strong>物理地址</strong></p>
-<p>从PE文件的第一个字节开始计数 起始值为0 就是用16进制查看器看到的左边的地址</p>
-<h2 id="2-6-DOS头"><a href="#2-6-DOS头" class="headerlink" title="2.6 DOS头"></a>2.6 DOS头</h2><p>开头是 4D 5A MZ </p>
+<h3 id="2-3-2-相对虚拟地址-Relative-Virtual-Address-RVA"><a href="#2-3-2-相对虚拟地址-Relative-Virtual-Address-RVA" class="headerlink" title="2.3.2 相对虚拟地址 Relative Virtual Address(RVA)"></a>2.3.2 相对虚拟地址 Relative Virtual Address(RVA)</h3><p>相对于文件载入地址(基址)的偏移. </p>
+<p>例如EXE从400000h基址载入, 某个代码区块(VA)开始于401000h,这个代码区块的RVA=1000h. </p>
+<p>虚拟地址(VA)=基地址(imagebase)+相对虚拟地址(RVA)</p>
+<h3 id="2-3-3-VirtualSize-amp-SizeOfRawData"><a href="#2-3-3-VirtualSize-amp-SizeOfRawData" class="headerlink" title="2.3.3 VirtualSize &amp; SizeOfRawData"></a>2.3.3 VirtualSize &amp; SizeOfRawData</h3><p><code>VirtualSize</code>: The total size of the section when loaded into memory. </p>
+<p>If this value is greater than SizeOfRawData, the section is zero-padded. This field is valid only for executable images and should be set to zero for object files.</p>
+<p><code>SizeOfRawData</code> The size of the section (for object files) or the size of the initialized data on disk (for image files). For executable images, this must be a multiple of FileAlignment from the optional header. If this is less than VirtualSize, the remainder of the section is zero-filled. Because the SizeOfRawData field is rounded but the VirtualSize field is not, it is possible for SizeOfRawData to be greater than VirtualSize as well. When a section contains only uninitialized data, this field should be zero.</p>
+<p><code>VirtualSize</code>是节没有进行对齐处理前的实际大小在内存里, 而<code>SizeOfRawData</code>是节在磁盘中所占空间的大小,也就是对齐后的大小(是FileAlignment的倍数)。</p>
+<p><img src="/2019/02/28/PE文件格式学习笔记/raw.png" alt></p>
+<p><img src="/2019/02/28/PE文件格式学习笔记/raw2.png" alt></p>
+<h2 id="2-4-文件偏移地址"><a href="#2-4-文件偏移地址" class="headerlink" title="2.4 文件偏移地址"></a>2.4 文件偏移地址</h2><p>当PE文件存在磁盘中的时候 某个数据相对于文件头的偏移量为<strong>文件偏移地址</strong> 或 <strong>物理地址</strong>.</p>
+<p>从PE文件的第一个字节开始计数 起始值为0 就是用16进制查看器看到的左边的地址.</p>
+<h1 id="3-DOS头"><a href="#3-DOS头" class="headerlink" title="3. DOS头"></a>3. DOS头</h1><p>开头是 4D 5A MZ </p>
 <p>偏移量3C 存的是PE文件头偏移 e_flanew<br>PE文件头指针=ImageBase+dosHeader-&gt;e_flanew</p>
 <h2 id="2-7-区块-节表地址"><a href="#2-7-区块-节表地址" class="headerlink" title="2.7 区块/节表地址"></a>2.7 区块/节表地址</h2><p>在PE文件头与原始数据间存在区块表 包含每个块在映像中的信息</p>
 <p>指向不同的区块实体 包含位置长度属性 </p>
@@ -260,7 +266,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Sketches</a>
         		</li>
       		
 		</ul>
@@ -330,11 +336,11 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/03/10/从零开始的Android学习-一/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/03/26/腾讯游戏安全部门面试题-CrackXX-exe/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          从零开始的Android学习(一)
+          腾讯游戏安全部门面试题-CrackXX.exe
         
       </div>
     </a>
@@ -368,7 +374,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-IAT-为什么脱壳后要修复IAT"><span class="toc-number">1.</span> <span class="toc-text">1. IAT (为什么脱壳后要修复IAT)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-程序调用DLL导出函数的原理"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 程序调用DLL导出函数的原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-导入表IAT"><span class="toc-number">1.2.</span> <span class="toc-text">1.2 导入表IAT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-壳的工作原理"><span class="toc-number">1.3.</span> <span class="toc-text">1.3 壳的工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-脱壳原理"><span class="toc-number">1.4.</span> <span class="toc-text">1.4 脱壳原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-5-脱壳过程"><span class="toc-number">1.5.</span> <span class="toc-text">1.5 脱壳过程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-PE"><span class="toc-number">2.</span> <span class="toc-text">2. PE</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-PE文件格式"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 PE文件格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-三个部分"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 三个部分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-VirtualSize-amp-SizeOfRawData"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 VirtualSize &amp; SizeOfRawData</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-RVA-相对虚拟地址"><span class="toc-number">2.4.</span> <span class="toc-text">2.4 RVA 相对虚拟地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-文件偏移"><span class="toc-number">2.5.</span> <span class="toc-text">2.5 文件偏移</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-6-DOS头"><span class="toc-number">2.6.</span> <span class="toc-text">2.6 DOS头</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-7-区块-节表地址"><span class="toc-number">2.7.</span> <span class="toc-text">2.7 区块/节表地址</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-1-IMAGE-SECTION-HEADER-结构"><span class="toc-number">2.7.1.</span> <span class="toc-text">2.7.1 IMAGE_SECTION_HEADER 结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-2-节表属性"><span class="toc-number">2.7.2.</span> <span class="toc-text">2.7.2 节表属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-3-计算"><span class="toc-number">2.7.3.</span> <span class="toc-text">2.7.3 计算</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-8-分析工具"><span class="toc-number">2.8.</span> <span class="toc-text">2.8 分析工具</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-IAT-为什么脱壳后要修复IAT"><span class="toc-number">1.</span> <span class="toc-text">1. IAT (为什么脱壳后要修复IAT)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-程序调用DLL导出函数的原理"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 程序调用DLL导出函数的原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-导入表IAT"><span class="toc-number">1.2.</span> <span class="toc-text">1.2 导入表IAT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-壳的工作原理"><span class="toc-number">1.3.</span> <span class="toc-text">1.3 壳的工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-脱壳原理"><span class="toc-number">1.4.</span> <span class="toc-text">1.4 脱壳原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-5-脱壳过程"><span class="toc-number">1.5.</span> <span class="toc-text">1.5 脱壳过程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-PE的基本概念"><span class="toc-number">2.</span> <span class="toc-text">2. PE的基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-基地址"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 基地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-虚拟地址-Virtual-Address-VA"><span class="toc-number">2.2.</span> <span class="toc-text">2.3 虚拟地址 Virtual Address(VA)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-1-虚拟地址-Virtual-Address-VA"><span class="toc-number">2.2.1.</span> <span class="toc-text">2.3.1 虚拟地址 Virtual Address(VA)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-2-相对虚拟地址-Relative-Virtual-Address-RVA"><span class="toc-number">2.2.2.</span> <span class="toc-text">2.3.2 相对虚拟地址 Relative Virtual Address(RVA)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-3-VirtualSize-amp-SizeOfRawData"><span class="toc-number">2.2.3.</span> <span class="toc-text">2.3.3 VirtualSize &amp; SizeOfRawData</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-文件偏移地址"><span class="toc-number">2.3.</span> <span class="toc-text">2.4 文件偏移地址</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-DOS头"><span class="toc-number">3.</span> <span class="toc-text">3. DOS头</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-7-区块-节表地址"><span class="toc-number">3.1.</span> <span class="toc-text">2.7 区块/节表地址</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-1-IMAGE-SECTION-HEADER-结构"><span class="toc-number">3.1.1.</span> <span class="toc-text">2.7.1 IMAGE_SECTION_HEADER 结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-2-节表属性"><span class="toc-number">3.1.2.</span> <span class="toc-text">2.7.2 节表属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-3-计算"><span class="toc-number">3.1.3.</span> <span class="toc-text">2.7.3 计算</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-8-分析工具"><span class="toc-number">3.2.</span> <span class="toc-text">2.8 分析工具</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
@@ -397,7 +403,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 Ronpa
+    		&copy; 2021 Ronpa
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -480,15 +486,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">writeup</a>
+                <a href="javascript:void(0)" class="js-tag color3">Writeup</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">整理</a>
+                <a href="javascript:void(0)" class="js-tag color4">Sketches</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
+                <a href="javascript:void(0)" class="js-tag color3">Cryptography</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -496,35 +502,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">reverse</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Machine Learning</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">web</a>
+                <a href="javascript:void(0)" class="js-tag color4">Web</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color3">Reverse</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">machine learning</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">malware analysis</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">unpacking</a>
+                <a href="javascript:void(0)" class="js-tag color3">Malware</a>
               </li>
             
             <div class="clearfix"></div>

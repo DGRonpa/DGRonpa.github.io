@@ -9,7 +9,7 @@
   <title>RSA公钥加密算法分析 | Ronpa的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="密码学课程设计作业 很久之前就会了 补上这个大坑难点在于大素数的生成 加解密过程倒是很简单好写 顺便当做复习了 (妈耶 没带书)">
-<meta name="keywords" content="密码学">
+<meta name="keywords" content="Cryptography">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RSA公钥加密算法分析">
 <meta property="og:url" content="http://Ronpa.top/2018/12/31/RSA公钥加密算法分析/index.html">
@@ -17,7 +17,7 @@
 <meta property="og:description" content="密码学课程设计作业 很久之前就会了 补上这个大坑难点在于大素数的生成 加解密过程倒是很简单好写 顺便当做复习了 (妈耶 没带书)">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://ronpa.top/2018/12/31/RSA公钥加密算法分析/result.png">
-<meta property="og:updated_time" content="2019-01-06T12:08:01.000Z">
+<meta property="og:updated_time" content="2021-01-25T19:27:40.583Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RSA公钥加密算法分析">
 <meta name="twitter:description" content="密码学课程设计作业 很久之前就会了 补上这个大坑难点在于大素数的生成 加解密过程倒是很简单好写 顺便当做复习了 (妈耶 没带书)">
@@ -172,7 +172,7 @@
 
         
         <a href="/2018/12/31/RSA公钥加密算法分析/" class="archive-article-date">
-  	<time datetime="2018-12-31T06:56:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-12-31</time>
+  	<time datetime="2018-12-31T14:56:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-12-31</time>
 </a>
         
       </header>
@@ -248,6 +248,8 @@
 <h3 id="python攻击脚本"><a href="#python攻击脚本" class="headerlink" title="python攻击脚本"></a>python攻击脚本</h3><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"># -*- coding: utf-<span class="number">8</span> -*-</span><br><span class="line"><span class="symbol">from</span> libnum <span class="meta">import</span> n2s</span><br><span class="line"><span class="symbol">from</span> gmpy2 <span class="meta">import</span> invert</span><br><span class="line"></span><br><span class="line"># 欧几里得算法</span><br><span class="line"><span class="symbol">def</span> egcd(a, <span class="keyword">b):</span></span><br><span class="line"><span class="keyword"> </span>   <span class="meta">if</span> a == <span class="number">0</span>:</span><br><span class="line">        return (<span class="keyword">b, </span><span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line"><span class="symbol">    else:</span></span><br><span class="line">        g, y, x = egcd(<span class="keyword">b </span>% a, a)</span><br><span class="line">        return (g, x - (<span class="keyword">b </span>// a) * y, y)</span><br><span class="line"></span><br><span class="line"><span class="symbol">def</span> main():</span><br><span class="line">    n = <span class="number">22708078815885011462462049064339185898712439277226831073457888403129378547350292420267016551819052430779004755846649044001024141485283286483130702616057274698473611149508798869706347501931583117632710700787228016480127677393649929530416598686027354216422565934459015161927613607902831542857977859612596282353679327773303727004407262197231586324599181983572622404590354084541788062262164510140605868122410388090174420147752408554129789760902300898046273909007852818474030770699647647363015102118956737673941354217692696044969695308506436573142565573487583507037356944848039864382339216266670673567488871508925311154801</span></span><br><span class="line">    <span class="built_in">c1</span> = <span class="number">22322035275663237041646893770451933509324701913484303338076210603542612758956262869640822486470121149424485571361007421293675516338822195280313794991136048140918842471219840263536338886250492682739436410013436651161720725855484866690084788721349555662019879081501113222996123305533009325964377798892703161521852805956811219563883312896330156298621674684353919547558127920925706842808914762199011054955816534977675267395009575347820387073483928425066536361482774892370969520740304287456555508933372782327506569010772537497541764311429052216291198932092617792645253901478910801592878203564861118912045464959832566051361</span></span><br><span class="line">    <span class="built_in">c2</span> = <span class="number">18702010045187015556548691642394982835669262147230212731309938675226458555210425972429418449273410535387985931036711854265623905066805665751803269106880746769003478900791099590239513925449748814075904017471585572848473556490565450062664706449128415834787961947266259789785962922238701134079720414228414066193071495304612341052987455615930023536823801499269773357186087452747500840640419365011554421183037505653461286732740983702740822671148045619497667184586123657285604061875653909567822328914065337797733444640351518775487649819978262363617265797982843179630888729407238496650987720428708217115257989007867331698397</span></span><br><span class="line">    e1 = <span class="number">11187289</span></span><br><span class="line">    e2 = <span class="number">9647291</span></span><br><span class="line">    s = egcd(e1, e2)	<span class="symbol">#s1</span> <span class="built_in">s2</span> 满足 e1*<span class="built_in">s1</span>+e2*<span class="built_in">s2</span><span class="number">=1</span></span><br><span class="line">    <span class="built_in">s1</span> = s[<span class="number">1</span>]</span><br><span class="line">    <span class="built_in">s2</span> = s[<span class="number">2</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="meta">if</span> <span class="built_in">s1</span>&lt;<span class="number">0</span>:</span><br><span class="line">        <span class="built_in">s1</span> = - <span class="built_in">s1</span></span><br><span class="line">        <span class="built_in">c1</span> = invert(<span class="built_in">c1</span>, n)</span><br><span class="line">    <span class="meta">elif</span> <span class="built_in">s2</span>&lt;<span class="number">0</span>:</span><br><span class="line">        <span class="built_in">s2</span> = - <span class="built_in">s2</span></span><br><span class="line">        <span class="built_in">c2</span> = invert(<span class="built_in">c2</span>, n)</span><br><span class="line">    m = pow(<span class="built_in">c1</span>,<span class="built_in">s1</span>,n)*pow(<span class="built_in">c2</span>,<span class="built_in">s2</span>,n) % n</span><br><span class="line">    print n2s(m)</span><br><span class="line"></span><br><span class="line"><span class="symbol">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
 <h2 id="低指数攻击"><a href="#低指数攻击" class="headerlink" title="低指数攻击"></a>低指数攻击</h2><h3 id="python攻击脚本-1"><a href="#python攻击脚本-1" class="headerlink" title="python攻击脚本"></a>python攻击脚本</h3><p> 非常简单 e看起来很大就行了</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#RSAwienerAttack.py</span></span><br><span class="line"><span class="keyword">import</span> ContinuedFractions, Arithmetic</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hack_RSA</span><span class="params">(e,n)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">        Finds d knowing (e,n)</span></span><br><span class="line"><span class="string">        applying the Wiener continued fraction attack</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">    frac = ContinuedFractions.rational_to_contfrac(e, n)</span><br><span class="line">    convergents = ContinuedFractions.convergents_from_contfrac(frac)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (k,d) <span class="keyword">in</span> convergents:</span><br><span class="line">        <span class="comment">#check if d is actually the key</span></span><br><span class="line">        <span class="keyword">if</span> k!=<span class="number">0</span> <span class="keyword">and</span> (e*d<span class="number">-1</span>)%k == <span class="number">0</span>:</span><br><span class="line">            phi = (e*d<span class="number">-1</span>)//k</span><br><span class="line">            s = n - phi + <span class="number">1</span></span><br><span class="line">            <span class="comment"># check if the equation x^2 - s*x + n = 0</span></span><br><span class="line">            <span class="comment"># has integer roots</span></span><br><span class="line">            discr = s*s - <span class="number">4</span>*n</span><br><span class="line">            <span class="keyword">if</span>(discr&gt;=<span class="number">0</span>):</span><br><span class="line">                t = Arithmetic.is_perfect_square(discr)</span><br><span class="line">                <span class="keyword">if</span> t!=<span class="number">-1</span> <span class="keyword">and</span> (s+t)%<span class="number">2</span>==<span class="number">0</span>:</span><br><span class="line">                    print(<span class="string">"\nHacked!"</span>)</span><br><span class="line">                    <span class="keyword">return</span> d</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    e=<span class="number">0x01008e81dda0e31928e8ee511108c7505f613105d2e2ff9b8371e429c2dd927065d4096d58c3763107f1d4fccf2db30a6d027c56617cbe7e0b7ed92228669efb3d2f2c20593c21efff31006afba768de4a0a4c1aa709d54898c81fcffbddf79caeae0b15f4b2c7e0bcba314f5e0783ad0e7fb982a4d201fa68296d667ccf57b94b</span></span><br><span class="line">    n=<span class="number">0x1BA0CC245B45CE5B5F56CD5CAA590C28D123D8A6D7FB64737FB7C1F5A858C1E35138B57B2214FF4B242245F33F72C2C0D21C24AD4C5F50994C2399D73E504A2661D9C4B99D53844AB13D9CD12A4D01679F0AC75F9A4EAA87C32169A17D77D80FD602964C7EA5030637659C7365E98D2EA5BB33A4717082DD5247D4FA7A1F0D573</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"e="</span></span><br><span class="line">    <span class="keyword">print</span> e</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"n="</span></span><br><span class="line">    <span class="keyword">print</span> n</span><br><span class="line">    d=hack_RSA(e,n)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"d="</span></span><br><span class="line">    <span class="keyword">print</span> d</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<h2 id="RSA-how-to-factorize-N-given-d"><a href="#RSA-how-to-factorize-N-given-d" class="headerlink" title="RSA: how to factorize N given d"></a>RSA: how to factorize N given d</h2><p>研究生遇到的一个小题目 <a href="https://www.di-mgt.com.au/rsa_factorize_n.html" target="_blank" rel="noopener">https://www.di-mgt.com.au/rsa_factorize_n.html</a></p>
+
       
 
       
@@ -260,7 +262,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">密码学</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Cryptography</a>
         		</li>
       		
 		</ul>
@@ -368,7 +370,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RSA介绍"><span class="toc-number">1.</span> <span class="toc-text">RSA介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#算法分析"><span class="toc-number">1.2.</span> <span class="toc-text">算法分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#私钥公钥生成过程概述"><span class="toc-number">1.2.1.</span> <span class="toc-text">私钥公钥生成过程概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#加密"><span class="toc-number">1.2.2.</span> <span class="toc-text">加密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解密"><span class="toc-number">1.2.3.</span> <span class="toc-text">解密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#python实现"><span class="toc-number">1.2.4.</span> <span class="toc-text">python实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RSA私钥解密证明"><span class="toc-number">1.3.</span> <span class="toc-text">RSA私钥解密证明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-m-n-1-即-m和n-互质"><span class="toc-number">1.3.1.</span> <span class="toc-text">(1) (m,n) = 1 即 m和n 互质</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-m与n不是互质关系"><span class="toc-number">1.3.2.</span> <span class="toc-text">(2) m与n不是互质关系</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安全性分析"><span class="toc-number">1.4.</span> <span class="toc-text">安全性分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RSA的现状"><span class="toc-number">1.4.1.</span> <span class="toc-text">RSA的现状</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RC4-攻击方式"><span class="toc-number">1.4.2.</span> <span class="toc-text">RC4 攻击方式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RSA常见攻击方法"><span class="toc-number">2.</span> <span class="toc-text">RSA常见攻击方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#共模攻击"><span class="toc-number">2.1.</span> <span class="toc-text">共模攻击</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#分析"><span class="toc-number">2.1.1.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#证明过程"><span class="toc-number">2.1.2.</span> <span class="toc-text">证明过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#python攻击脚本"><span class="toc-number">2.1.3.</span> <span class="toc-text">python攻击脚本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#低指数攻击"><span class="toc-number">2.2.</span> <span class="toc-text">低指数攻击</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#python攻击脚本-1"><span class="toc-number">2.2.1.</span> <span class="toc-text">python攻击脚本</span></a></li></ol></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RSA介绍"><span class="toc-number">1.</span> <span class="toc-text">RSA介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#算法分析"><span class="toc-number">1.2.</span> <span class="toc-text">算法分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#私钥公钥生成过程概述"><span class="toc-number">1.2.1.</span> <span class="toc-text">私钥公钥生成过程概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#加密"><span class="toc-number">1.2.2.</span> <span class="toc-text">加密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解密"><span class="toc-number">1.2.3.</span> <span class="toc-text">解密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#python实现"><span class="toc-number">1.2.4.</span> <span class="toc-text">python实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RSA私钥解密证明"><span class="toc-number">1.3.</span> <span class="toc-text">RSA私钥解密证明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-m-n-1-即-m和n-互质"><span class="toc-number">1.3.1.</span> <span class="toc-text">(1) (m,n) = 1 即 m和n 互质</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-m与n不是互质关系"><span class="toc-number">1.3.2.</span> <span class="toc-text">(2) m与n不是互质关系</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安全性分析"><span class="toc-number">1.4.</span> <span class="toc-text">安全性分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RSA的现状"><span class="toc-number">1.4.1.</span> <span class="toc-text">RSA的现状</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RC4-攻击方式"><span class="toc-number">1.4.2.</span> <span class="toc-text">RC4 攻击方式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RSA常见攻击方法"><span class="toc-number">2.</span> <span class="toc-text">RSA常见攻击方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#共模攻击"><span class="toc-number">2.1.</span> <span class="toc-text">共模攻击</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#分析"><span class="toc-number">2.1.1.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#证明过程"><span class="toc-number">2.1.2.</span> <span class="toc-text">证明过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#python攻击脚本"><span class="toc-number">2.1.3.</span> <span class="toc-text">python攻击脚本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#低指数攻击"><span class="toc-number">2.2.</span> <span class="toc-text">低指数攻击</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#python攻击脚本-1"><span class="toc-number">2.2.1.</span> <span class="toc-text">python攻击脚本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RSA-how-to-factorize-N-given-d"><span class="toc-number">2.3.</span> <span class="toc-text">RSA: how to factorize N given d</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
@@ -397,7 +399,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 Ronpa
+    		&copy; 2021 Ronpa
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -480,15 +482,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">writeup</a>
+                <a href="javascript:void(0)" class="js-tag color3">Writeup</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">整理</a>
+                <a href="javascript:void(0)" class="js-tag color4">Sketches</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
+                <a href="javascript:void(0)" class="js-tag color3">Cryptography</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -496,35 +498,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">reverse</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Machine Learning</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">web</a>
+                <a href="javascript:void(0)" class="js-tag color4">Web</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color3">Reverse</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">machine learning</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">malware analysis</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">unpacking</a>
+                <a href="javascript:void(0)" class="js-tag color3">Malware</a>
               </li>
             
             <div class="clearfix"></div>

@@ -9,7 +9,7 @@
   <title>2020腾讯游戏安全竞赛决赛PC方向分析 | Ronpa的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="毕设摸鱼 emmmmm试一试能不能把决赛的ring3给做了 ring0放弃 驱动不会">
-<meta name="keywords" content="writeup">
+<meta name="keywords" content="Writeup">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2020腾讯游戏安全竞赛决赛PC方向分析">
 <meta property="og:url" content="http://Ronpa.top/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/index.html">
@@ -19,7 +19,17 @@
 <meta property="og:image" content="http://ronpa.top/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/1-1.png">
 <meta property="og:image" content="http://ronpa.top/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/1-2.png">
 <meta property="og:image" content="http://ronpa.top/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/1-3.png">
-<meta property="og:updated_time" content="2020-09-29T12:42:07.623Z">
+<meta property="og:image" content="http://ronpa.top/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/patch2.png">
+<meta property="og:image" content="http://ronpa.top/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/patch1.png">
+<meta property="og:image" content="http://ronpa.top/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/va.png">
+<meta property="og:image" content="http://ronpa.top/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/autoplay1.png">
+<meta property="og:image" content="http://ronpa.top/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/map.png">
+<meta property="og:image" content="http://ronpa.top/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/map1.png">
+<meta property="og:image" content="http://ronpa.top/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/search.png">
+<meta property="og:image" content="http://ronpa.top/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/autoplay.png">
+<meta property="og:image" content="http://ronpa.top/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/print1.png">
+<meta property="og:image" content="http://ronpa.top/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/print2.png">
+<meta property="og:updated_time" content="2021-02-17T21:51:36.907Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2020腾讯游戏安全竞赛决赛PC方向分析">
 <meta name="twitter:description" content="毕设摸鱼 emmmmm试一试能不能把决赛的ring3给做了 ring0放弃 驱动不会">
@@ -174,7 +184,7 @@
 
         
         <a href="/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/" class="archive-article-date">
-  	<time datetime="2020-04-24T13:34:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-24</time>
+  	<time datetime="2020-04-24T20:34:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-24</time>
 </a>
         
       </header>
@@ -192,10 +202,10 @@
 </ol>
 <p><a href="https://bbs.pediy.com/thread-258803.htm" target="_blank" rel="noopener">https://bbs.pediy.com/thread-258803.htm</a><br><a href="https://www.52pojie.cn/thread-1155772-1-1.html" target="_blank" rel="noopener">https://www.52pojie.cn/thread-1155772-1-1.html</a><br><a href="https://bbs.pediy.com/thread-258801.htm" target="_blank" rel="noopener">https://bbs.pediy.com/thread-258801.htm</a></p>
 <h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>和上一题一样差不多, 但这次不是直接修改程序, 而是添加了一个dll, 方法估计也是直接从dump文件里提取外挂dll. 然后分析调用的函数.</p>
-<h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h2><p>用windbg打开dump文件, <code>lm</code>展开查看已经加载的模块<img src="/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/1-1.png" alt><br>第四个从名字看就很有问题<code>CheatTools</code>, 查看模块信息,一看就不是什么正经模块233333</p>
+<h2 id="overview-of-cheat-module"><a href="#overview-of-cheat-module" class="headerlink" title="overview of cheat module"></a>overview of cheat module</h2><p>用windbg打开dump文件, <code>lm</code>展开查看已经加载的模块<img src="/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/1-1.png" alt><br>第四个从名字看就很有问题<code>CheatTools</code>, 查看模块信息,一看就不是什么正经模块233333</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span><span class="string">:004&gt;</span> <span class="string">lmDvmCheatTools</span></span><br><span class="line"><span class="string">Browse</span> <span class="string">full</span> <span class="string">module</span> <span class="string">list</span></span><br><span class="line"><span class="string">start</span>    <span class="string">end</span>        <span class="string">module</span> <span class="string">name</span></span><br><span class="line"><span class="number">6e220000</span> <span class="number">6e266000</span>   <span class="string">CheatTools</span>   <span class="string">(deferred)</span>             </span><br><span class="line">    <span class="attr">Image path:</span> <span class="string">D:\Temp\bin\CheatTools.dll</span></span><br><span class="line">    <span class="attr">Image name:</span> <span class="string">CheatTools.dll</span></span><br><span class="line">    <span class="string">Browse</span> <span class="string">all</span> <span class="string">global</span> <span class="string">symbols</span>  <span class="string">functions</span>  <span class="string">data</span></span><br><span class="line">    <span class="attr">Timestamp:</span>        <span class="string">Sun</span> <span class="string">Apr</span> <span class="number">23</span> <span class="number">14</span><span class="string">:46:00</span> <span class="number">2017</span> <span class="string">(58FC4DA8)</span></span><br><span class="line">    <span class="attr">CheckSum:</span>         <span class="number">00045158</span></span><br><span class="line">    <span class="attr">ImageSize:</span>        <span class="number">00046000</span></span><br><span class="line">    <span class="attr">File version:</span>     <span class="number">1.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">    <span class="attr">Product version:</span>  <span class="number">1.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">    <span class="attr">File flags:</span>       <span class="number">0</span> <span class="string">(Mask</span> <span class="string">3F)</span></span><br><span class="line">    <span class="attr">File OS:</span>          <span class="number">4</span> <span class="string">Unknown</span> <span class="string">Win32</span></span><br><span class="line">    <span class="attr">File type:</span>        <span class="number">2.0</span> <span class="string">Dll</span></span><br><span class="line">    <span class="attr">File date:</span>        <span class="number">00000000.00000000</span></span><br><span class="line">    <span class="attr">Translations:</span>     <span class="number">0804.</span><span class="string">03a8</span></span><br><span class="line">    <span class="attr">Information from resource tables:</span></span><br><span class="line">        <span class="attr">CompanyName:      TODO:</span> <span class="string">&lt;公司名&gt;</span></span><br><span class="line">        <span class="attr">ProductName:      TODO:</span> <span class="string">&lt;产品名&gt;</span></span><br><span class="line">        <span class="attr">InternalName:</span>     <span class="string">CheatTools.dll</span></span><br><span class="line">        <span class="attr">OriginalFilename:</span> <span class="string">CheatTools.dll</span></span><br><span class="line">        <span class="attr">ProductVersion:</span>   <span class="number">1.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">        <span class="attr">FileVersion:</span>      <span class="number">1.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">        <span class="attr">FileDescription:  TODO:</span> <span class="string">&lt;文件说明&gt;</span></span><br><span class="line">        <span class="attr">LegalCopyright:   TODO:</span> <span class="string">(C)</span> <span class="string">&lt;公司名&gt;。保留所有权利。</span></span><br></pre></td></tr></table></figure>
 <p>接下来就是从dump里扒出来这个dll. <code>.writemem C:\CTF\CheatTools.dll 6e220000 (6e266000-0x1)</code></p>
-<p>该dll已在内存中展开, 需要把Raw RawSize修正,才能被工具正常识别区段,<br>修复dll的区段地址: <code>Raw Adress -&gt; Virtual Address</code><br><img src="/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/1-2.png" alt></p>
+<p>该dll已在内存中展开, 需要把Raw RawSize修正,才能被工具正常识别区段,<br>修复dll的区段地址: <code>Raw Adress -&gt; Virtual Address</code>. 将Raw Address和Virtual Address弄成一样.<br><img src="/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/1-2.png" alt></p>
 <p>丢进IDA里发现有很多MFC的函数 所以丢进Resource Hacker 里看看窗口, 发现能明显地看出<code>CheatTool.dll</code>实现的功能 同时也能看到按钮对应的号码立即数<br><img src="/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/1-3.png" alt><br>能直观地看出四个功能功能分别是:</p>
 <ul>
 <li>暂停时间</li>
@@ -203,6 +213,41 @@
 <li>一键游戏</li>
 <li>地雷分布</li>
 </ul>
+<h2 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h2><h3 id="暂停时间-amp-遇雷不爆"><a href="#暂停时间-amp-遇雷不爆" class="headerlink" title="暂停时间 &amp; 遇雷不爆"></a>暂停时间 &amp; 遇雷不爆</h3><p>在函数里找到两个更改memory的, 看了一下改的是初赛的两个. </p>
+<p>patch inc -&gt; nope, 实现时间不增长; patch -&gt; jmp, 实现踩雷不爆.<br><img src="/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/patch2.png" alt><br><img src="/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/patch1.png" alt></p>
+<ol>
+<li>暂停时间, 函数偏移 <code>0x6E221660 - 0x6E220000 = 0x1660</code></li>
+<li>遇雷不爆, 函数偏移 <code>0x6E2216D0 - 0x6E220000 = 0x16D0</code></li>
+</ol>
+<p>MEMORY里的地址是扫雷程序在内存里的VA, 放在ida里能看到<br><img src="/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/va.png" alt></p>
+<h3 id="一键游戏"><a href="#一键游戏" class="headerlink" title="一键游戏"></a>一键游戏</h3><p>往下找几个函数, 就能找到. 开头调用了扫雷exe里的 <code>0x1005312</code>函数, <code>0x1005334</code>和<code>0x1005338</code>的值. 后面还用到了<code>0x1005340</code> 和 <code>100546C</code>的值.<br><img src="/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/autoplay1.png" alt></p>
+<p>首先去动态调试原扫雷程序看看<code>0x1005312</code>函数的功能, 在唯一会调用<code>0x1005312</code>函数的<code>sub_10037E1</code>下断. 发现每次点击扫雷某一格子均会触发一次.<br><img src="/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/map.png" alt><br>所以dll里的<code>MEMORY[0x1005312](1,1)</code> 相当于自动在(1,1)开始游戏. </p>
+<ol>
+<li><code>0x1005334</code> 地图最大列数</li>
+<li><code>0x1005338</code> 地图最大行数</li>
+<li><code>0x1005340</code> 地图基址</li>
+<li><code>v0 = MEMORY[0x1005338] * MEMORY[0x1005334] + 0x100546C</code> 地图边界</li>
+<li>雷类型 = <code>0x8F</code>; 换行 = <code>0x10</code>; 空地 = <code>0x0F</code>; 数字表示扫出来的周边雷数(0x41, 0x42…); 死亡时变成<code>0xCC</code>.</li>
+</ol>
+<p>还原出来其中一个地图的信息, 去掉0x0F的空行, 对比扫雷结果, 的确是地图.</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">8</span>F <span class="number">0</span>F </span><br><span class="line"><span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">8</span>F <span class="number">0</span>F <span class="number">0</span>F </span><br><span class="line"><span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">8</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F </span><br><span class="line"><span class="number">0</span>F <span class="number">0</span>F <span class="number">8</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F </span><br><span class="line"><span class="number">0</span>F <span class="number">0</span>F <span class="number">8</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F </span><br><span class="line"><span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F </span><br><span class="line"><span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">8</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F </span><br><span class="line"><span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">8</span>F <span class="number">8</span>F <span class="number">0</span>F </span><br><span class="line"><span class="number">0</span>F <span class="number">8</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">8</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F <span class="number">0</span>F</span><br></pre></td></tr></table></figure>
+<p><img src="/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/map1.png" alt></p>
+<p>最后遍历棋盘, 假如不是雷就<code>playat(j,i)</code>, finish this game automatically!<br><img src="/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/search.png" alt></p>
+<p>一键游戏, 函数偏移 <code>0x6E221820 - 0x6E220000 = 0x1820</code></p>
+<h3 id="地雷分布"><a href="#地雷分布" class="headerlink" title="地雷分布"></a>地雷分布</h3><p><img src="/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/autoplay.png" alt><br>前面获取<code>0x1005340</code>地图信息的过程类似, 最后是打印出雷的数量和位置(sub_6E223040函数里有vprint函数, 所以可以推断是打印)</p>
+<p><img src="/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/print1.png" alt><br><img src="/2020/04/24/2020腾讯游戏安全竞赛决赛PC方向分析/print2.png" alt></p>
+<p>地图分步, 函数偏移 <code>0x6E221AC0 - 0x6E220000 = 0x1AC0</code></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="答案"><a href="#答案" class="headerlink" title="答案"></a>答案</h3><ol>
+<li>暂停时间, 函数偏移 <code>0x6E221660 - 0x6E220000 = 0x1660</code></li>
+<li>遇雷不爆, 函数偏移 <code>0x6E2216D0 - 0x6E220000 = 0x16D0</code></li>
+<li>一键游戏, 函数偏移 <code>0x6E221820 - 0x6E220000 = 0x1820</code></li>
+<li>地图分步, 函数偏移 <code>0x6E221AC0 - 0x6E220000 = 0x1AC0</code></li>
+</ol>
+<h3 id="过程总结"><a href="#过程总结" class="headerlink" title="过程总结"></a>过程总结</h3><ol>
+<li>用 windbg打开dump文件并提取.dll文件.</li>
+<li>提取后要修复Raw Address.</li>
+<li>dll里使用的是exe文件的va.</li>
+</ol>
 
       
 
@@ -216,7 +261,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">writeup</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Writeup</a>
         		</li>
       		
 		</ul>
@@ -286,11 +331,11 @@
   
 <nav id="article-nav">
   
-    <a href="/2020/05/05/DLL注入技术学习笔记/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2020/05/17/2020网鼎杯朱雀组/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          DLL注入技术学习笔记
+          2020网鼎杯朱雀组
         
       </div>
     </a>
@@ -324,7 +369,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#要求"><span class="toc-number">1.</span> <span class="toc-text">要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思路"><span class="toc-number">2.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#过程"><span class="toc-number">3.</span> <span class="toc-text">过程</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#要求"><span class="toc-number">1.</span> <span class="toc-text">要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思路"><span class="toc-number">2.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#overview-of-cheat-module"><span class="toc-number">3.</span> <span class="toc-text">overview of cheat module</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码分析"><span class="toc-number">4.</span> <span class="toc-text">代码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#暂停时间-amp-遇雷不爆"><span class="toc-number">4.1.</span> <span class="toc-text">暂停时间 &amp; 遇雷不爆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一键游戏"><span class="toc-number">4.2.</span> <span class="toc-text">一键游戏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#地雷分布"><span class="toc-number">4.3.</span> <span class="toc-text">地雷分布</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#答案"><span class="toc-number">5.1.</span> <span class="toc-text">答案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过程总结"><span class="toc-number">5.2.</span> <span class="toc-text">过程总结</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
@@ -353,7 +398,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 Ronpa
+    		&copy; 2021 Ronpa
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -436,15 +481,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">writeup</a>
+                <a href="javascript:void(0)" class="js-tag color3">Writeup</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">整理</a>
+                <a href="javascript:void(0)" class="js-tag color4">Sketches</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">密码学</a>
+                <a href="javascript:void(0)" class="js-tag color3">Cryptography</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -452,35 +497,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">reverse</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Machine Learning</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">web</a>
+                <a href="javascript:void(0)" class="js-tag color4">Web</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color3">Reverse</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">machine learning</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">malware analysis</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">unpacking</a>
+                <a href="javascript:void(0)" class="js-tag color3">Malware</a>
               </li>
             
             <div class="clearfix"></div>
