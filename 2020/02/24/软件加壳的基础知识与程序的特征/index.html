@@ -31,7 +31,9 @@
 <meta property="og:image" content="http://ronpa.top/2020/02/24/软件加壳的基础知识与程序的特征/Delhpi.png">
 <meta property="og:image" content="http://ronpa.top/2020/02/24/软件加壳的基础知识与程序的特征/delhpi2.png">
 <meta property="og:image" content="http://ronpa.top/2020/02/24/软件加壳的基础知识与程序的特征/autoIT.png">
-<meta property="og:updated_time" content="2021-01-25T19:20:11.878Z">
+<meta property="og:image" content="http://ronpa.top/2020/02/24/软件加壳的基础知识与程序的特征/vb.png">
+<meta property="og:image" content="http://ronpa.top/2020/02/24/软件加壳的基础知识与程序的特征/vb2.png">
+<meta property="og:updated_time" content="2021-08-09T01:28:04.075Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="软件加壳的基础知识与程序的特征">
 <meta name="twitter:description" content="先恭喜黄同学被 伦敦大学学院UCL 的 Msc information security 专业录取, 撒花~鼓掌~, 未来可期 名校加身 见更多的人 体验完全不同的生活 即将开始自闭的留学生活23333.(能有自己一个带独卫的房间真是太好了)写的尽量简单一点 因为快到ddl了估计再研究一段时间就要转移动安全了 毕竟win下的软件加密加壳需求也少了 大家都去做手机app了">
@@ -208,7 +210,7 @@
 <li>入口点代码是固定的代码,入口调用的API也是相同的(上图的<code>msvctr._set_app_type</code>这类的),其中有的push地址不同程序可能不同</li>
 <li><strong>区段有四个</strong>也是固定的.text、.rdata、.data和.rsrc.</li>
 </ol>
-<h2 id="2-2-VS2008和VS2013编译无壳程序-两者差不多"><a href="#2-2-VS2008和VS2013编译无壳程序-两者差不多" class="headerlink" title="2.2 VS2008和VS2013编译无壳程序(两者差不多)"></a>2.2 VS2008和VS2013编译无壳程序(两者差不多)</h2><p>OD直接打开代码入口特点:<br><img src="/2020/02/24/软件加壳的基础知识与程序的特征/vs2008.png" alt><br><img src="/2020/02/24/软件加壳的基础知识与程序的特征/vs20083.png" alt></p>
+<h2 id="2-2-VS2008-VC-8-和VS2013编译无壳程序-两者差不多"><a href="#2-2-VS2008-VC-8-和VS2013编译无壳程序-两者差不多" class="headerlink" title="2.2 VS2008(VC++8)和VS2013编译无壳程序(两者差不多)"></a>2.2 VS2008(VC++8)和VS2013编译无壳程序(两者差不多)</h2><p>OD直接打开代码入口特点:<br><img src="/2020/02/24/软件加壳的基础知识与程序的特征/vs2008.png" alt><br><img src="/2020/02/24/软件加壳的基础知识与程序的特征/vs20083.png" alt></p>
 <p>五个区段:<br><img src="/2020/02/24/软件加壳的基础知识与程序的特征/vs20082.png" alt></p>
 <p>VS特点：</p>
 <ol>
@@ -237,6 +239,7 @@
 </ol>
 <h2 id="2-5-BC-编译无壳程序"><a href="#2-5-BC-编译无壳程序" class="headerlink" title="2.5 BC++编译无壳程序"></a>2.5 BC++编译无壳程序</h2><p>入口特征: 很大的一个jump<br>区段和Delphi差不多</p>
 <h2 id="2-6-autoIT-脚本语言"><a href="#2-6-autoIT-脚本语言" class="headerlink" title="2.6 autoIT 脚本语言"></a>2.6 autoIT 脚本语言</h2><p>查找字符串<br><img src="/2020/02/24/软件加壳的基础知识与程序的特征/autoIT.png" alt></p>
+<h2 id="2-7-VB"><a href="#2-7-VB" class="headerlink" title="2.7 VB"></a>2.7 VB</h2><p>一个push, 一个call<br><img src="/2020/02/24/软件加壳的基础知识与程序的特征/vb.png" alt><br><img src="/2020/02/24/软件加壳的基础知识与程序的特征/vb2.png" alt></p>
 <h1 id="3-侦壳"><a href="#3-侦壳" class="headerlink" title="3. 侦壳"></a>3. 侦壳</h1><h2 id="3-1-PEiD、Exeinfo-PE等查壳工具"><a href="#3-1-PEiD、Exeinfo-PE等查壳工具" class="headerlink" title="3.1 PEiD、Exeinfo PE等查壳工具"></a>3.1 PEiD、Exeinfo PE等查壳工具</h2><p>通过PEiD、Exeinfo PE等查壳工具内置<strong>各种壳的十六进制特征码</strong>进行对比查壳</p>
 <p>PEiD、FFI、FastScanner、RDG Packer Detector这类程序都是通过目录下的userdb.txt（查壳程序不同可能数据库名有出入）<strong>数据库进行加壳程序特征对比</strong>的，全球基本都在用fly在09年发布的UpKPEiDSign，更新都没有太好效果，由于<strong>原理都是通过加壳程序的特征进行对应</strong>，而这些加壳特征都是个人总结而来，对加壳程序的模糊搜索对比造成可靠性不高，特别是对于VMProtect这类加密壳程序，经常被识别成一些算七八糟都没见过的加壳内容，特别是显示UPolyX，基本都是误报，但对于传统的一些压缩壳的识别效果还是很好的，有利有弊，正是由于它的开放性特征库，也方便给大家提供自己编写特征的方法，来识别一些新的壳.</p>
 <p>Exeinfo PE属于新一代查壳工具，它和PEiD的区别可能就在于它的特征库是作者自己维护，不支持外部修改，新版好像也开始支持外部特征库了，这款查壳工具的加壳特征库比较准确而且范围很广，如ThemIDA、WinLicense、VMProtect、ZProtect、Shielden都可以轻松识别出来.</p>
@@ -378,7 +381,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-前言"><span class="toc-number">1.</span> <span class="toc-text">1. 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-无壳程序入口特征"><span class="toc-number">2.</span> <span class="toc-text">2. 无壳程序入口特征</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-VC6编译无壳程序"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 VC6编译无壳程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-VS2008和VS2013编译无壳程序-两者差不多"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 VS2008和VS2013编译无壳程序(两者差不多)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-易语言编译无壳程序（独立编译和非独立编译）"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 易语言编译无壳程序（独立编译和非独立编译）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-1-独立编译"><span class="toc-number">2.3.1.</span> <span class="toc-text">2.3.1 独立编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-2-非独立编译带运行库"><span class="toc-number">2.3.2.</span> <span class="toc-text">2.3.2 非独立编译带运行库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-Delhpi编译无壳程序"><span class="toc-number">2.4.</span> <span class="toc-text">2.4 Delhpi编译无壳程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-BC-编译无壳程序"><span class="toc-number">2.5.</span> <span class="toc-text">2.5 BC++编译无壳程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-6-autoIT-脚本语言"><span class="toc-number">2.6.</span> <span class="toc-text">2.6 autoIT 脚本语言</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-侦壳"><span class="toc-number">3.</span> <span class="toc-text">3. 侦壳</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-PEiD、Exeinfo-PE等查壳工具"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 PEiD、Exeinfo PE等查壳工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-通过入口特征和区段特征来识别"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 通过入口特征和区段特征来识别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-1-区段信息"><span class="toc-number">3.2.1.</span> <span class="toc-text">3.2.1 区段信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-2-入口特征"><span class="toc-number">3.2.2.</span> <span class="toc-text">3.2.2 入口特征</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-脱壳"><span class="toc-number">4.</span> <span class="toc-text">4. 脱壳</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-脱壳原理"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 脱壳原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-脱壳过程"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 脱壳过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-1"><span class="toc-number">4.2.1.</span> <span class="toc-text">4.2.1</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-脱壳结束判定"><span class="toc-number">4.3.</span> <span class="toc-text">5. 脱壳结束判定</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-前言"><span class="toc-number">1.</span> <span class="toc-text">1. 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-无壳程序入口特征"><span class="toc-number">2.</span> <span class="toc-text">2. 无壳程序入口特征</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-VC6编译无壳程序"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 VC6编译无壳程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-VS2008-VC-8-和VS2013编译无壳程序-两者差不多"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 VS2008(VC++8)和VS2013编译无壳程序(两者差不多)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-易语言编译无壳程序（独立编译和非独立编译）"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 易语言编译无壳程序（独立编译和非独立编译）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-1-独立编译"><span class="toc-number">2.3.1.</span> <span class="toc-text">2.3.1 独立编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-2-非独立编译带运行库"><span class="toc-number">2.3.2.</span> <span class="toc-text">2.3.2 非独立编译带运行库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-Delhpi编译无壳程序"><span class="toc-number">2.4.</span> <span class="toc-text">2.4 Delhpi编译无壳程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-BC-编译无壳程序"><span class="toc-number">2.5.</span> <span class="toc-text">2.5 BC++编译无壳程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-6-autoIT-脚本语言"><span class="toc-number">2.6.</span> <span class="toc-text">2.6 autoIT 脚本语言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-7-VB"><span class="toc-number">2.7.</span> <span class="toc-text">2.7 VB</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-侦壳"><span class="toc-number">3.</span> <span class="toc-text">3. 侦壳</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-PEiD、Exeinfo-PE等查壳工具"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 PEiD、Exeinfo PE等查壳工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-通过入口特征和区段特征来识别"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 通过入口特征和区段特征来识别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-1-区段信息"><span class="toc-number">3.2.1.</span> <span class="toc-text">3.2.1 区段信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-2-入口特征"><span class="toc-number">3.2.2.</span> <span class="toc-text">3.2.2 入口特征</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-脱壳"><span class="toc-number">4.</span> <span class="toc-text">4. 脱壳</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-脱壳原理"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 脱壳原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-脱壳过程"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 脱壳过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-1"><span class="toc-number">4.2.1.</span> <span class="toc-text">4.2.1</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-脱壳结束判定"><span class="toc-number">4.3.</span> <span class="toc-text">5. 脱壳结束判定</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
@@ -502,11 +505,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">malware analysis</a>
+                <a href="javascript:void(0)" class="js-tag color4">IOT</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">IOT</a>
+                <a href="javascript:void(0)" class="js-tag color2">malware analysis</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -519,6 +522,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Reverse</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">reverse</a>
               </li>
              
               <li class="article-tag-list-item">

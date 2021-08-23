@@ -8,22 +8,24 @@
   <link rel="dns-prefetch" href="http://Ronpa.top">
   <title>PE文件格式/ IAT 学习笔记 | Ronpa的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="开了好久好久的坑 填上了/ 后续补写一些基础知识当做补缺/ 全是转载 不是原创/ PE; IAT">
+  <meta name="description" content="开了好久好久的坑 填上了/ 后续补写一些基础知识当做补缺/ 全是转载 不是原创/PE; IAT这个系列讲的很仔细">
 <meta name="keywords" content="Sketches">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PE文件格式&#x2F; IAT 学习笔记">
 <meta property="og:url" content="http://Ronpa.top/2019/02/28/PE文件格式学习笔记/index.html">
 <meta property="og:site_name" content="Ronpa的博客">
-<meta property="og:description" content="开了好久好久的坑 填上了/ 后续补写一些基础知识当做补缺/ 全是转载 不是原创/ PE; IAT">
+<meta property="og:description" content="开了好久好久的坑 填上了/ 后续补写一些基础知识当做补缺/ 全是转载 不是原创/PE; IAT这个系列讲的很仔细">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://ronpa.top/2019/02/28/PE文件格式学习笔记/1-1.png">
 <meta property="og:image" content="http://ronpa.top/2019/02/28/PE文件格式学习笔记/PE映像.png">
 <meta property="og:image" content="http://ronpa.top/2019/02/28/PE文件格式学习笔记/raw.png">
 <meta property="og:image" content="http://ronpa.top/2019/02/28/PE文件格式学习笔记/raw2.png">
-<meta property="og:updated_time" content="2021-02-15T21:53:07.274Z">
+<meta property="og:image" content="http://ronpa.top/2019/02/28/PE文件格式学习笔记/structure.png">
+<meta property="og:image" content="http://ronpa.top/2019/02/28/PE文件格式学习笔记/PE_structure.png">
+<meta property="og:updated_time" content="2021-08-16T22:42:30.283Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PE文件格式&#x2F; IAT 学习笔记">
-<meta name="twitter:description" content="开了好久好久的坑 填上了/ 后续补写一些基础知识当做补缺/ 全是转载 不是原创/ PE; IAT">
+<meta name="twitter:description" content="开了好久好久的坑 填上了/ 后续补写一些基础知识当做补缺/ 全是转载 不是原创/PE; IAT这个系列讲的很仔细">
 <meta name="twitter:image" content="http://ronpa.top/2019/02/28/PE文件格式学习笔记/1-1.png">
   
     <link rel="alternative" href="/atom.xml" title="Ronpa的博客" type="application/atom+xml">
@@ -183,10 +185,10 @@
     <div class="article-entry" itemprop="articleBody">
       
         <blockquote>
-<p>开了好久好久的坑 填上了/ 后续补写一些基础知识当做补缺/ 全是转载 不是原创/ PE; IAT</p>
+<p>开了好久好久的坑 填上了/ 后续补写一些基础知识当做补缺/ 全是转载 不是原创/<br>PE; IAT<br><a href="https://blog.csdn.net/evileagle/article/details/11903197" target="_blank" rel="noopener">这个系列讲的很仔细</a></p>
 </blockquote>
 <a id="more"></a>
-<h1 id="1-IAT-为什么脱壳后要修复IAT"><a href="#1-IAT-为什么脱壳后要修复IAT" class="headerlink" title="1. IAT (为什么脱壳后要修复IAT)"></a>1. IAT (为什么脱壳后要修复IAT)</h1><p>导入表= 输入表(IT import table, 内置结构是IID: IMAGE_IMPORT_DESCRIPTOR 一个dll对应一个导入表)<br><br>IAT 导入地址表<br><br>INT 导入名称表<br></p>
+<h1 id="1-IAT-为什么脱壳后要修复IAT"><a href="#1-IAT-为什么脱壳后要修复IAT" class="headerlink" title="1. IAT (为什么脱壳后要修复IAT)"></a>1. IAT (为什么脱壳后要修复IAT)</h1><p>导入表= 输入表(IT import table, 内置结构是IID: <code>IMAGE_IMPORT_DESCRIPTOR</code> 一个dll对应一个导入表)<br><br>IAT 导入地址表<br><br>INT 导入名称表<br></p>
 <p><a href="https://bbs.pediy.com/thread-151939.htm" target="_blank" rel="noopener">原帖</a></p>
 <h2 id="1-1-程序调用DLL导出函数的原理"><a href="#1-1-程序调用DLL导出函数的原理" class="headerlink" title="1.1 程序调用DLL导出函数的原理"></a>1.1 程序调用DLL导出函数的原理</h2><p>PE调用DLL里的函数，一般是先加载这个DLL模块到它的进程地址空间，然后在加载后的地址范围内找到每个调用函数的地址，在程序中你可以使用<code>LoadLibrary()</code>这个系统API去动态去加载某个DLL，再通过<code>GetProcAddress()</code>系统API来找到DLL导出的某个函数地址，得到函数地址了你才能使用这个函数。<br>用户DLL被加载后的基址可发生变化，导入的函数地址不是固定的，你不能使用固定的地址。<br>系统DLL虽然基址固定，函数地址固定，但是一般不会直接使用函数硬地址，<br>还是要<code>GetProcAddress()</code>这个API来得到地址，因为XP、win7等每个系统的这些地址<br>是不一样的，会导致兼容性问题。</p>
 <p><strong>个人总结:</strong></p>
@@ -226,33 +228,92 @@
 <p><code>.data</code> 数据段 左下角一堆</p>
 <p><code>.rsrc</code> 资源段 实实在在看到的界面 包括上面的东西logo 按钮 菜单</p>
 <h2 id="2-1-基地址"><a href="#2-1-基地址" class="headerlink" title="2.1 基地址"></a>2.1 基地址</h2><p>ImageBase, 由PE文件自己设置的, 默认用VC++ 生成的<code>EXE</code>文件基地址是 <code>400000h</code>, <code>DLL</code>是<code>10000000h</code>, 可以改变.</p>
-<p><strong>QUESTION?</strong> (也就是说是固定的了? 但问题是这是在内存里的地址, 内存的地址又不是只有一个exe或者dll).<br><strong>ANSWER</strong> (基地址+相对虚拟地址(RVA)=内存里的真正开始地址)</p>
+<p><strong>QUESTION?</strong> (也就是说是固定的了? 但问题是这是在内存里的地址, 内存的地址又不是只有一个exe或者dll). </p>
+<p><strong>ANSWER:</strong> </p>
+<ol>
+<li>(基地址+相对虚拟地址(RVA)=内存里的真正开始地址)</li>
+<li>基地址重定位, 例如有两个使用相同预订地址的dll, 第二个就会被重定位到一个和它请求位置不同的内存地址.</li>
+</ol>
 <h2 id="2-3-虚拟地址-Virtual-Address-VA"><a href="#2-3-虚拟地址-Virtual-Address-VA" class="headerlink" title="2.3 虚拟地址 Virtual Address(VA)"></a>2.3 虚拟地址 Virtual Address(VA)</h2><h3 id="2-3-1-虚拟地址-Virtual-Address-VA"><a href="#2-3-1-虚拟地址-Virtual-Address-VA" class="headerlink" title="2.3.1 虚拟地址 Virtual Address(VA)"></a>2.3.1 虚拟地址 Virtual Address(VA)</h3><p>内存中程序真正的地址, 由磁盘文件里的各块映射而来, 顺序分布相同, 但是间隔可能不同.</p>
 <p>虚拟地址(VA)=基地址(imagebase)+相对虚拟地址(RVA)</p>
 <h3 id="2-3-2-相对虚拟地址-Relative-Virtual-Address-RVA"><a href="#2-3-2-相对虚拟地址-Relative-Virtual-Address-RVA" class="headerlink" title="2.3.2 相对虚拟地址 Relative Virtual Address(RVA)"></a>2.3.2 相对虚拟地址 Relative Virtual Address(RVA)</h3><p>相对于文件载入地址(基址)的偏移. </p>
 <p>例如EXE从400000h基址载入, 某个代码区块(VA)开始于401000h,这个代码区块的RVA=1000h. </p>
 <p>虚拟地址(VA)=基地址(imagebase)+相对虚拟地址(RVA)</p>
-<h3 id="2-3-3-VirtualSize-amp-SizeOfRawData"><a href="#2-3-3-VirtualSize-amp-SizeOfRawData" class="headerlink" title="2.3.3 VirtualSize &amp; SizeOfRawData"></a>2.3.3 VirtualSize &amp; SizeOfRawData</h3><p><code>VirtualSize</code>: The total size of the section when loaded into memory. </p>
-<p>If this value is greater than SizeOfRawData, the section is zero-padded. This field is valid only for executable images and should be set to zero for object files.</p>
-<p><code>SizeOfRawData</code> The size of the section (for object files) or the size of the initialized data on disk (for image files). For executable images, this must be a multiple of FileAlignment from the optional header. If this is less than VirtualSize, the remainder of the section is zero-filled. Because the SizeOfRawData field is rounded but the VirtualSize field is not, it is possible for SizeOfRawData to be greater than VirtualSize as well. When a section contains only uninitialized data, this field should be zero.</p>
-<p><code>VirtualSize</code>是节没有进行对齐处理前的实际大小在内存里, 而<code>SizeOfRawData</code>是节在磁盘中所占空间的大小,也就是对齐后的大小(是FileAlignment的倍数)。</p>
+<h3 id="2-3-3-VirtualSize-amp-SizeOfRawData"><a href="#2-3-3-VirtualSize-amp-SizeOfRawData" class="headerlink" title="2.3.3 VirtualSize &amp; SizeOfRawData"></a>2.3.3 VirtualSize &amp; SizeOfRawData</h3><p><code>VirtualSize</code>是节没有进行对齐处理前的实际大小在内存里, 而<code>SizeOfRawData</code>是节在磁盘中所占空间的大小,也就是对齐后的大小(是FileAlignment的倍数)(hex fiend里看到的, 例如.text段的RAW d)</p>
 <p><img src="/2019/02/28/PE文件格式学习笔记/raw.png" alt></p>
 <p><img src="/2019/02/28/PE文件格式学习笔记/raw2.png" alt></p>
 <h2 id="2-4-文件偏移地址"><a href="#2-4-文件偏移地址" class="headerlink" title="2.4 文件偏移地址"></a>2.4 文件偏移地址</h2><p>当PE文件存在磁盘中的时候 某个数据相对于文件头的偏移量为<strong>文件偏移地址</strong> 或 <strong>物理地址</strong>.</p>
 <p>从PE文件的第一个字节开始计数 起始值为0 就是用16进制查看器看到的左边的地址.</p>
-<h1 id="3-DOS头"><a href="#3-DOS头" class="headerlink" title="3. DOS头"></a>3. DOS头</h1><p>开头是 4D 5A MZ </p>
+<h1 id="3-PE文件结构"><a href="#3-PE文件结构" class="headerlink" title="3. PE文件结构"></a>3. PE文件结构</h1><p><img src="/2019/02/28/PE文件格式学习笔记/structure.png" alt><br><img src="/2019/02/28/PE文件格式学习笔记/PE_structure.png" alt></p>
+<h2 id="3-1-DOS头"><a href="#3-1-DOS头" class="headerlink" title="3.1 DOS头"></a>3.1 DOS头</h2><p>开头是 4D 5A MZ </p>
 <p>偏移量3C 存的是PE文件头偏移 e_flanew<br>PE文件头指针=ImageBase+dosHeader-&gt;e_flanew</p>
-<h2 id="2-7-区块-节表地址"><a href="#2-7-区块-节表地址" class="headerlink" title="2.7 区块/节表地址"></a>2.7 区块/节表地址</h2><p>在PE文件头与原始数据间存在区块表 包含每个块在映像中的信息</p>
-<p>指向不同的区块实体 包含位置长度属性 </p>
-<p>该数组长度由头文件里的 NumberofSection指出</p>
-<h3 id="2-7-1-IMAGE-SECTION-HEADER-结构"><a href="#2-7-1-IMAGE-SECTION-HEADER-结构" class="headerlink" title="2.7.1 IMAGE_SECTION_HEADER 结构"></a>2.7.1 IMAGE_SECTION_HEADER 结构</h3><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">IMAGE_FILE_HEADER STRUCT</span><br><span class="line">+<span class="number">04h</span>    <span class="built_in">WORD</span>          Machine<span class="comment">;   // 运行平台</span></span><br><span class="line">+<span class="number">06h</span>      <span class="built_in">WORD</span>          NumberOfSections<span class="comment">; // 文件的区块数目</span></span><br><span class="line">+<span class="number">08h</span>    <span class="built_in">DWORD</span>         TimeDateStamp<span class="comment">;  // 文件创建日期和时间</span></span><br><span class="line">+<span class="number">0Ch</span>      <span class="built_in">DWORD</span>         PointerToSymbolTable<span class="comment">; // 指向符号表(主要用于调试)</span></span><br><span class="line">+<span class="number">10h</span>     <span class="built_in">DWORD</span>         NumberOfSymbols<span class="comment">;  // 符号表中符号个数(同上)</span></span><br><span class="line">+<span class="number">14h</span>      <span class="built_in">WORD</span>          SizeOfOptionalHeader<span class="comment">;  // IMAGE_OPTIONAL_HEADER32 结构大小</span></span><br><span class="line">+<span class="number">16h</span>      <span class="built_in">WORD</span>          Characteristics<span class="comment">;  // 文件属性</span></span><br></pre></td></tr></table></figure>
-<h3 id="2-7-2-节表属性"><a href="#2-7-2-节表属性" class="headerlink" title="2.7.2 节表属性"></a>2.7.2 节表属性</h3><figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">IMAGE_SECTION_HEADER <span class="keyword">STRUCT</span></span><br><span class="line">BYTE Name[IMAGE_SIZEOF_SHORT_NAME]; <span class="comment">// 8个字节的节区名称</span></span><br><span class="line"><span class="built_in">union</span> Misc</span><br><span class="line">  DWORD PhysicalAddress;       </span><br><span class="line">  DWORD VirtualSize;            <span class="comment">//节区的尺寸</span></span><br><span class="line">ends</span><br><span class="line">DWORD VirtualAddress;         <span class="comment">// 节区的 RVA 地址</span></span><br><span class="line">DWORD SizeOfRawData;            <span class="comment">// 在文件中对齐后的尺寸</span></span><br><span class="line">DWORD PointerToRawData;        <span class="comment">// 在文件中的偏移量</span></span><br><span class="line">DWORD PointerToRelocations;     <span class="comment">// 在OBJ文件中使用，重定位的偏移</span></span><br><span class="line">DWORD PointerToLinenumbers;   <span class="comment">// 行号表的偏移（供调试使用地）</span></span><br><span class="line">WORD NumberOfRelocations;      <span class="comment">// 在OBJ文件中使用，重定位项数目</span></span><br><span class="line">WORD NumberOfLinenumbers;    <span class="comment">// 行号表中行号的数目</span></span><br><span class="line">DWORD Characteristics;       <span class="comment">// 节属性如可读，可写，可执行等</span></span><br></pre></td></tr></table></figure>
-<h3 id="2-7-3-计算"><a href="#2-7-3-计算" class="headerlink" title="2.7.3 计算"></a>2.7.3 计算</h3><ol>
-<li>循环扫描区块表得出每个区块在内存中的起始 RVA（根据IMAGE_SECTION_HEADER 中的VirtualAddress 字段），并根据区块的大小（根据IMAGE_SECTION_HEADER 中的SizeOfRawData 字段）算出区块的结束 RVA（两者相加即可），最后判断目标 RVA 是否落在该区块内。</li>
-<li>通过步骤一定位了目标 RVA 处于具体的某个区块中后，那么用目标 RVA 减去该区块的起始 RVA ，这样就能得到目标 RVA 相对于区块起始地址的偏移量 RVA2.</li>
-<li>在区块表中获取该区块在文件中所处的偏移地址（根据IMAGE_SECTION_HEADER 中的PointerToRawData 字段）, 将这个偏移值加上步骤二得到的 RVA2 值，就得到了真正的文件偏移地址</li>
+<h2 id="3-2-PE头"><a href="#3-2-PE头" class="headerlink" title="3.2 PE头"></a>3.2 PE头</h2><h3 id="3-2-1-PE文件头（IMAGE-FILE-HEADER"><a href="#3-2-1-PE文件头（IMAGE-FILE-HEADER" class="headerlink" title="3.2.1 PE文件头（IMAGE_FILE_HEADER)"></a>3.2.1 PE文件头（<code>IMAGE_FILE_HEADER</code>)</h3><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">IMAGE_FILE_HEADER STRUCT</span><br><span class="line">+<span class="number">04h</span>    <span class="built_in">WORD</span>          Machine<span class="comment">;   // 运行平台</span></span><br><span class="line">+<span class="number">06h</span>      <span class="built_in">WORD</span>          NumberOfSections<span class="comment">; // 文件的区块数目</span></span><br><span class="line">+<span class="number">08h</span>    <span class="built_in">DWORD</span>         TimeDateStamp<span class="comment">;  // 文件创建日期和时间</span></span><br><span class="line">+<span class="number">0Ch</span>      <span class="built_in">DWORD</span>         PointerToSymbolTable<span class="comment">; // 指向符号表(主要用于调试)</span></span><br><span class="line">+<span class="number">10h</span>     <span class="built_in">DWORD</span>         NumberOfSymbols<span class="comment">;  // 符号表中符号个数(同上)</span></span><br><span class="line">+<span class="number">14h</span>      <span class="built_in">WORD</span>          SizeOfOptionalHeader<span class="comment">;  // IMAGE_OPTIONAL_HEADER32 结构大小</span></span><br><span class="line">+<span class="number">16h</span>      <span class="built_in">WORD</span>          Characteristics<span class="comment">;  // 文件属性</span></span><br></pre></td></tr></table></figure>
+<p>PE文件头定义了PE文件的一些<strong>基本信息和属性</strong>，这些属性会在PE加载器加载时用到，如果加载器发现PE文件头中定义的一些属性不满足当前的运行环境，将会终止加载该PE</p>
+<h3 id="3-3-2-PE可选头（IMAGE-OPTIONAL-HEADER32）"><a href="#3-3-2-PE可选头（IMAGE-OPTIONAL-HEADER32）" class="headerlink" title="3.3.2 PE可选头（IMAGE_OPTIONAL_HEADER32）"></a>3.3.2 PE可选头（<code>IMAGE_OPTIONAL_HEADER32</code>）</h3><p>OEP的RVA, 代码段的RVA, 数据段的RVA, ImageBase内存基址, 导入表, 导出表等信息.</p>
+<h2 id="3-3-块表-节表"><a href="#3-3-块表-节表" class="headerlink" title="3.3 块表/节表"></a>3.3 块表/节表</h2><p>例如有四个区段, 则有四个<code>IMAGE_SECTION_HEADER</code></p>
+<ol>
+<li>在PE文件头与原始数据间存在区块表 包含每个块在映像中的信息</li>
+<li>指向不同的区块实体 包含位置长度属性 </li>
+<li>该数组长度由头文件里的 NumberofSection指出</li>
+<li>windows根据节表的描述加载每个节</li>
 </ol>
-<h2 id="2-8-分析工具"><a href="#2-8-分析工具" class="headerlink" title="2.8 分析工具"></a>2.8 分析工具</h2><p>pe explore</p>
+<h3 id="3-3-1-IMAGE-SECTION-HEADER-节表结构"><a href="#3-3-1-IMAGE-SECTION-HEADER-节表结构" class="headerlink" title="3.3.1 IMAGE_SECTION_HEADER 节表结构"></a>3.3.1 <code>IMAGE_SECTION_HEADER</code> 节表结构</h3><figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">IMAGE_SECTION_HEADER <span class="keyword">STRUCT</span></span><br><span class="line">BYTE Name[IMAGE_SIZEOF_SHORT_NAME]; <span class="comment">// 8个字节的节区名称</span></span><br><span class="line"><span class="built_in">union</span> Misc</span><br><span class="line">  DWORD PhysicalAddress;       </span><br><span class="line">  DWORD VirtualSize;            <span class="comment">//节区的尺寸</span></span><br><span class="line">ends</span><br><span class="line">DWORD VirtualAddress;         <span class="comment">// 节区的 RVA 地址</span></span><br><span class="line">DWORD SizeOfRawData;            <span class="comment">// 在文件中对齐后的尺寸</span></span><br><span class="line">DWORD PointerToRawData;        <span class="comment">// 在文件中的偏移量</span></span><br><span class="line">DWORD PointerToRelocations;     <span class="comment">// 在OBJ文件中使用，重定位的偏移</span></span><br><span class="line">DWORD PointerToLinenumbers;   <span class="comment">// 行号表的偏移（供调试使用地）</span></span><br><span class="line">WORD NumberOfRelocations;      <span class="comment">// 在OBJ文件中使用，重定位项数目</span></span><br><span class="line">WORD NumberOfLinenumbers;    <span class="comment">// 行号表中行号的数目</span></span><br><span class="line">DWORD Characteristics;       <span class="comment">// 节属性如可读，可写，可执行等</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-3-2-计算"><a href="#3-3-2-计算" class="headerlink" title="3.3.2 计算"></a>3.3.2 计算</h3><ol>
+<li>循环扫描区块表得出每个区块在内存中的起始 RVA（根据<code>IMAGE_SECTION_HEADER</code> 中的<code>VirtualAddress</code> 字段），并根据区块的大小（根据<code>IMAGE_SECTION_HEADER</code> 中的<code>SizeOfRawData</code> 字段）算出区块的结束 RVA（两者相加即可），最后判断目标 RVA 是否落在该区块内。</li>
+<li>通过步骤一定位了目标 RVA 处于具体的某个区块中后，那么用目标 RVA 减去该区块的起始 RVA ，这样就能得到目标 RVA 相对于区块起始地址的偏移量 RVA2.</li>
+<li>在区块表中获取该区块在文件中所处的偏移地址（根据<code>IMAGE_SECTION_HEADER</code> 中的<code>PointerToRawData</code> 字段）, 将这个偏移值加上步骤二得到的 RVA2 值，就得到了真正的文件偏移地址</li>
+</ol>
+<h2 id="3-4-区块"><a href="#3-4-区块" class="headerlink" title="3.4 区块"></a>3.4 区块</h2><ul>
+<li>.rsrc 资源块</li>
+<li>其他块</li>
+<li>.data 数据块</li>
+<li>.text 代码块</li>
+</ul>
+<h2 id="3-5-调试信息"><a href="#3-5-调试信息" class="headerlink" title="3.5 调试信息"></a>3.5 调试信息</h2><h2 id="3-6-分析工具"><a href="#3-6-分析工具" class="headerlink" title="3.6 分析工具"></a>3.6 分析工具</h2><p>pe explore/ PEid/ peinfor/ loadPE</p>
+<h1 id="4-pe文件加载链接的过程"><a href="#4-pe文件加载链接的过程" class="headerlink" title="4. pe文件加载链接的过程"></a>4. pe文件加载链接的过程</h1><h2 id="IAT填充"><a href="#IAT填充" class="headerlink" title="IAT填充"></a>IAT填充</h2><p>由windows装载器完成，所以称为隐式链接(动态链接)，当程序使用隐式链接调用DLL代码的时候，装载器需要完成以下几个步骤(IAT填充):</p>
+<ol>
+<li>首先将所需要的<strong>DLL文件载入内存</strong>，Kernel32.dll等是通过映射的方式载入的</li>
+<li>定位<code>IID(IMAGE_IMPORT_DESCRIPTOR)</code>，寻找IID的第四个字段<code>Name</code>(指向导入的<strong>DLL名字</strong>的RVA)。(多个dll需要 遍历<code>IMAGE_IMPORT_DESCRIPTOR</code>)</li>
+<li>接着根据<code>OrginalFirstThunk</code>指向，获取<code>INT(输入名称表)</code>。</li>
+<li>根据INT执行的<code>IMAGE_IMPORT_BY_NAME</code>结构获取<strong>函数名称</strong></li>
+<li>利用类似于<code>GetProcAddress</code>函数功能的操作，获取函数地址<code>VA</code></li>
+<li>将获取的API函数地址<code>填充入IAT</code>。</li>
+<li>断链，将FirstThunk断开</li>
+</ol>
+<h2 id="导入延迟表"><a href="#导入延迟表" class="headerlink" title="导入延迟表"></a>导入延迟表</h2><p>有些导入函数可能使用的<strong>频率比较低</strong>，或者在某些特定的场合才会用到，而有些函数可能要在程序运行<strong>一段时间</strong>后才会用到，这些函数可以等到他实际使用的时候再去加载对应的DLL，而没必要再程序一装载就初始化好。可以加快启动速度</p>
+<p>在vc里的编译选项里输入dll名称, 即可实现延迟导入</p>
+<p>有一项为<code>IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT</code>，这一项便延迟导入表<br>既然是表，肯定又是一个数组，每一项都是一个<code>ImgDelayDescr</code>结构体，和导入表一样，每一项都代表一个导入的DLL</p>
+<figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">typedef struct <span class="type">ImgDelayDescr</span> &#123;</span><br><span class="line">    <span class="type">DWORD</span>           grAttrs;        // attributes</span><br><span class="line">    <span class="type">RVA</span>             rvaDLLName;     // <span class="type">RVA</span> to dll name</span><br><span class="line">    <span class="type">RVA</span>             rvaHmod;        // <span class="type">RVA</span> of module handle</span><br><span class="line">    <span class="type">RVA</span>             rvaIAT;         // <span class="type">RVA</span> of the <span class="type">IAT</span></span><br><span class="line">    <span class="type">RVA</span>             rvaINT;         // <span class="type">RVA</span> of the <span class="type">INT</span></span><br><span class="line">    <span class="type">RVA</span>             rvaBoundIAT;    // <span class="type">RVA</span> of the optional bound <span class="type">IAT</span></span><br><span class="line">    <span class="type">RVA</span>             rvaUnloadIAT;   // <span class="type">RVA</span> of optional copy of original <span class="type">IAT</span></span><br><span class="line">    <span class="type">DWORD</span>           dwTimeStamp;    // 0 if not bound,</span><br><span class="line">                                    // <span class="type">O</span>.<span class="type">W</span>. date/time stamp of <span class="type">DLL</span> bound to (<span class="type">Old</span> <span class="type">BIND</span>)</span><br><span class="line">&#125; <span class="type">ImgDelayDescr</span>, * <span class="type">PImgDelayDescr</span>;</span><br><span class="line">typedef const <span class="type">ImgDelayDescr</span> *   <span class="type">PCImgDelayDescr</span>;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>当函数第一次调用, 延迟导入表里的函数的时候</li>
+<li>CALL了一个<code>__delayLoadHelper</code>，在这个函数里，执行了加载DLL，查找导出函数，填充导入表等一系列操作</li>
+<li>函数结束时IAT中已经是真正的导入函数的地址(<strong>完成IAT填充</strong>)，</li>
+<li>这个函数同时返回了导入函数的地址，因此之后的eax里保存的就是函数地址，最后的jmp eax就跳转到了真实的导入函数中(<strong>并且跳转到目标函数地址</strong>)。</li>
+</ol>
+<p><strong>注意:</strong></p>
+<ul>
+<li>延迟导入的加载只发生在函数第一次被调用的时候，之后IAT就填充为正确函数地址，不会再走<code>__delayLoadHelper</code>了。</li>
+<li>延迟导入一次只会导入一个函数，而不是一次导入整个模块的所有函数。</li>
+</ul>
+<h2 id="导出表"><a href="#导出表" class="headerlink" title="导出表"></a>导出表</h2><p>当一个PE文件被装载的时候，装载器会将PE文件中所有被登记的DLL一起载入，然后根据DLL的导出表对导入表中的IAT进行修正</p>
+<ol>
+<li>定位到<code>IMAGE_EXPORT_DIRECTORY</code>结构</li>
+<li>判断<code>Name(dll名称)</code>是否是传入的DllName.</li>
+<li>获取<code>ENT(导出名称表)</code>数组的起始地址，寻找FuncName，如果找到记录在ENT的数组索引。</li>
+<li>然后读取导出函数序号数据的第一项的<code>序号值</code></li>
+<li>使用Base+序号的值到<code>EAT</code>中寻找地址</li>
+</ol>
+<h2 id="基址重定位"><a href="#基址重定位" class="headerlink" title="基址重定位"></a>基址重定位</h2><p>加密与解密第四版 p433</p>
+<p>每个进程内存是相互独立的，也就是说exe文件发生重定位的可能性不高，这样看来由于DLL的装载位置的不同，DLL文件发生重定位的可能性就比较高了，因为同一个进程空间里面可能存在多个DLL文件，有时候多个dll设定的原始的基地址是相同的，但是对于操作系统来说这是不允许存在的，所以需要对他们进行重定位。</p>
+<p>如果加载dll，发现不是使用默认的基地址，PE加载器就会把基址重定位表中所写的地址的值改掉。改掉方法是把原先的值加上 实际基地址 - 默认基地址 的值。</p>
+<p>需要被重定位的数据保存在一张表里面，然后取出里面的地址，利用某一个特定的公式，重新计算加载地址即可。</p>
+<h3 id="重定位表结构"><a href="#重定位表结构" class="headerlink" title="重定位表结构"></a>重定位表结构</h3><p>重定位表是由多个<code>IMAGE_BASE_RELOCATION</code>结构体构成的。有三个成员变量</p>
+<ul>
+<li>VirtualAddress: 是重定位数组的RVA，但是需要每个重定位数组地址加上这个RVA才是真正的重定位数组的地址</li>
+<li>SizeofBlock：重定位结构大小</li>
+<li>TypeOffset：两个字节，16位，高4位表示重定位类型，低12位表示重定位地址</li>
+</ul>
+<p><a href="https://blog.csdn.net/billvsme/article/details/39834257" target="_blank" rel="noopener">https://blog.csdn.net/billvsme/article/details/39834257</a></p>
 
       
 
@@ -374,7 +435,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-IAT-为什么脱壳后要修复IAT"><span class="toc-number">1.</span> <span class="toc-text">1. IAT (为什么脱壳后要修复IAT)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-程序调用DLL导出函数的原理"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 程序调用DLL导出函数的原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-导入表IAT"><span class="toc-number">1.2.</span> <span class="toc-text">1.2 导入表IAT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-壳的工作原理"><span class="toc-number">1.3.</span> <span class="toc-text">1.3 壳的工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-脱壳原理"><span class="toc-number">1.4.</span> <span class="toc-text">1.4 脱壳原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-5-脱壳过程"><span class="toc-number">1.5.</span> <span class="toc-text">1.5 脱壳过程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-PE的基本概念"><span class="toc-number">2.</span> <span class="toc-text">2. PE的基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-基地址"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 基地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-虚拟地址-Virtual-Address-VA"><span class="toc-number">2.2.</span> <span class="toc-text">2.3 虚拟地址 Virtual Address(VA)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-1-虚拟地址-Virtual-Address-VA"><span class="toc-number">2.2.1.</span> <span class="toc-text">2.3.1 虚拟地址 Virtual Address(VA)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-2-相对虚拟地址-Relative-Virtual-Address-RVA"><span class="toc-number">2.2.2.</span> <span class="toc-text">2.3.2 相对虚拟地址 Relative Virtual Address(RVA)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-3-VirtualSize-amp-SizeOfRawData"><span class="toc-number">2.2.3.</span> <span class="toc-text">2.3.3 VirtualSize &amp; SizeOfRawData</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-文件偏移地址"><span class="toc-number">2.3.</span> <span class="toc-text">2.4 文件偏移地址</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-DOS头"><span class="toc-number">3.</span> <span class="toc-text">3. DOS头</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-7-区块-节表地址"><span class="toc-number">3.1.</span> <span class="toc-text">2.7 区块/节表地址</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-1-IMAGE-SECTION-HEADER-结构"><span class="toc-number">3.1.1.</span> <span class="toc-text">2.7.1 IMAGE_SECTION_HEADER 结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-2-节表属性"><span class="toc-number">3.1.2.</span> <span class="toc-text">2.7.2 节表属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-3-计算"><span class="toc-number">3.1.3.</span> <span class="toc-text">2.7.3 计算</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-8-分析工具"><span class="toc-number">3.2.</span> <span class="toc-text">2.8 分析工具</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-IAT-为什么脱壳后要修复IAT"><span class="toc-number">1.</span> <span class="toc-text">1. IAT (为什么脱壳后要修复IAT)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-程序调用DLL导出函数的原理"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 程序调用DLL导出函数的原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-导入表IAT"><span class="toc-number">1.2.</span> <span class="toc-text">1.2 导入表IAT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-壳的工作原理"><span class="toc-number">1.3.</span> <span class="toc-text">1.3 壳的工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-脱壳原理"><span class="toc-number">1.4.</span> <span class="toc-text">1.4 脱壳原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-5-脱壳过程"><span class="toc-number">1.5.</span> <span class="toc-text">1.5 脱壳过程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-PE的基本概念"><span class="toc-number">2.</span> <span class="toc-text">2. PE的基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-基地址"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 基地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-虚拟地址-Virtual-Address-VA"><span class="toc-number">2.2.</span> <span class="toc-text">2.3 虚拟地址 Virtual Address(VA)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-1-虚拟地址-Virtual-Address-VA"><span class="toc-number">2.2.1.</span> <span class="toc-text">2.3.1 虚拟地址 Virtual Address(VA)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-2-相对虚拟地址-Relative-Virtual-Address-RVA"><span class="toc-number">2.2.2.</span> <span class="toc-text">2.3.2 相对虚拟地址 Relative Virtual Address(RVA)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-3-VirtualSize-amp-SizeOfRawData"><span class="toc-number">2.2.3.</span> <span class="toc-text">2.3.3 VirtualSize &amp; SizeOfRawData</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-文件偏移地址"><span class="toc-number">2.3.</span> <span class="toc-text">2.4 文件偏移地址</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-PE文件结构"><span class="toc-number">3.</span> <span class="toc-text">3. PE文件结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-DOS头"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 DOS头</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-PE头"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 PE头</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-1-PE文件头（IMAGE-FILE-HEADER"><span class="toc-number">3.2.1.</span> <span class="toc-text">3.2.1 PE文件头（IMAGE_FILE_HEADER)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-2-PE可选头（IMAGE-OPTIONAL-HEADER32）"><span class="toc-number">3.2.2.</span> <span class="toc-text">3.3.2 PE可选头（IMAGE_OPTIONAL_HEADER32）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-块表-节表"><span class="toc-number">3.3.</span> <span class="toc-text">3.3 块表/节表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-1-IMAGE-SECTION-HEADER-节表结构"><span class="toc-number">3.3.1.</span> <span class="toc-text">3.3.1 IMAGE_SECTION_HEADER 节表结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-2-计算"><span class="toc-number">3.3.2.</span> <span class="toc-text">3.3.2 计算</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-区块"><span class="toc-number">3.4.</span> <span class="toc-text">3.4 区块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-5-调试信息"><span class="toc-number">3.5.</span> <span class="toc-text">3.5 调试信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-6-分析工具"><span class="toc-number">3.6.</span> <span class="toc-text">3.6 分析工具</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-pe文件加载链接的过程"><span class="toc-number">4.</span> <span class="toc-text">4. pe文件加载链接的过程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#IAT填充"><span class="toc-number">4.1.</span> <span class="toc-text">IAT填充</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#导入延迟表"><span class="toc-number">4.2.</span> <span class="toc-text">导入延迟表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#导出表"><span class="toc-number">4.3.</span> <span class="toc-text">导出表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基址重定位"><span class="toc-number">4.4.</span> <span class="toc-text">基址重定位</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#重定位表结构"><span class="toc-number">4.4.1.</span> <span class="toc-text">重定位表结构</span></a></li></ol></li></ol></li></ol>
                     </div>
                 </span>
             </div>
@@ -498,11 +559,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">malware analysis</a>
+                <a href="javascript:void(0)" class="js-tag color4">IOT</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">IOT</a>
+                <a href="javascript:void(0)" class="js-tag color2">malware analysis</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -515,6 +576,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Reverse</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">reverse</a>
               </li>
              
               <li class="article-tag-list-item">

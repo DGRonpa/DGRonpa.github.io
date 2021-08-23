@@ -8,20 +8,26 @@
   <link rel="dns-prefetch" href="http://Ronpa.top">
   <title>汇编常见语句整理_持续更新 | Ronpa的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="不定期自查 查漏补缺">
+  <meta name="description" content="不定期自查 查漏补缺. 用于识别汇编中的C代码结构">
 <meta name="keywords" content="Sketches">
 <meta property="og:type" content="article">
 <meta property="og:title" content="汇编常见语句整理_持续更新">
 <meta property="og:url" content="http://Ronpa.top/2018/01/05/汇编常见语句整理/index.html">
 <meta property="og:site_name" content="Ronpa的博客">
-<meta property="og:description" content="不定期自查 查漏补缺">
+<meta property="og:description" content="不定期自查 查漏补缺. 用于识别汇编中的C代码结构">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://ronpa.top/2018/01/05/汇编常见语句整理/jmp.png">
 <meta property="og:image" content="http://ronpa.top/2018/01/05/汇编常见语句整理/qword.png">
-<meta property="og:updated_time" content="2021-02-21T14:07:58.478Z">
+<meta property="og:image" content="http://ronpa.top/2018/01/05/汇编常见语句整理/if.png">
+<meta property="og:image" content="http://ronpa.top/2018/01/05/汇编常见语句整理/for.png">
+<meta property="og:image" content="http://ronpa.top/2018/01/05/汇编常见语句整理/while.png">
+<meta property="og:image" content="http://ronpa.top/2018/01/05/汇编常见语句整理/switch.png">
+<meta property="og:image" content="http://ronpa.top/2018/01/05/汇编常见语句整理/switch2.png">
+<meta property="og:updated_time" content="2021-08-12T21:54:25.196Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="汇编常见语句整理_持续更新">
-<meta name="twitter:description" content="不定期自查 查漏补缺">
-<meta name="twitter:image" content="http://ronpa.top/2018/01/05/汇编常见语句整理/qword.png">
+<meta name="twitter:description" content="不定期自查 查漏补缺. 用于识别汇编中的C代码结构">
+<meta name="twitter:image" content="http://ronpa.top/2018/01/05/汇编常见语句整理/jmp.png">
   
     <link rel="alternative" href="/atom.xml" title="Ronpa的博客" type="application/atom+xml">
   
@@ -180,13 +186,30 @@
     <div class="article-entry" itemprop="articleBody">
       
         <blockquote>
-<p>不定期自查 查漏补缺</p>
+<p>不定期自查 查漏补缺. 用于识别汇编中的C代码结构</p>
 </blockquote>
 <a id="more"></a>
+<h2 id="局部变量和全局变量"><a href="#局部变量和全局变量" class="headerlink" title="局部变量和全局变量"></a>局部变量和全局变量</h2><ol>
+<li>局部变量使用栈来记录. 例如 <code>[ebp-4]</code>, 又或者是局部变量<code>var_4</code>的偏移为<code>-4</code>(变量偏移为负数), <code>[ebp+var_4]</code>.</li>
+<li>全局变量使用内存来记录. 例如 <code>dword_40CF60</code>.</li>
+</ol>
+<h2 id="算数操作"><a href="#算数操作" class="headerlink" title="算数操作"></a>算数操作</h2><h3 id="加减"><a href="#加减" class="headerlink" title="加减"></a>加减</h3><p>加减操作比较简单, 使用寄存器当跳板, 减了或者加了之后再赋值回去</p>
+<p>例如代码 a=0; a=a+1; 如下</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mov</span> [<span class="built_in">ebp</span>+var_4],<span class="number">0</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">ecx</span>, [<span class="built_in">ebp</span>+var_4]</span><br><span class="line"><span class="keyword">add</span> <span class="built_in">ecx</span>, <span class="number">1</span></span><br><span class="line"><span class="keyword">mov</span> [<span class="built_in">ebp</span>+var_4], <span class="built_in">ecx</span></span><br></pre></td></tr></table></figure>
 <h3 id="inc"><a href="#inc" class="headerlink" title="inc"></a>inc</h3><p><strong>INC</strong> ++ 操作数自加1 指令将影响SF,AF,ZF,PF,OF标志位，但是不影响CF标志位。</p>
-<h2 id="判断-跳转"><a href="#判断-跳转" class="headerlink" title="判断 跳转"></a>判断 跳转</h2><h3 id="标志位-ZF"><a href="#标志位-ZF" class="headerlink" title="标志位 ZF"></a>标志位 ZF</h3><p>若ZF=1(表示本次运算结果为0，不为0则ZF=0)</p>
+<h3 id="取模-div-idiv-有符号-无符号"><a href="#取模-div-idiv-有符号-无符号" class="headerlink" title="取模/ div/ idiv (有符号 无符号)"></a>取模/ div/ idiv (有符号 无符号)</h3><p><code>div rcx</code> =&gt; <code>rax/rcx, remainder move to the rdx</code></p>
+<p>例如代码 b=a%3; 如下</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mov</span> <span class="built_in">eax</span>, [<span class="built_in">ebp</span>+var_4]</span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">ecx</span>, <span class="number">3</span></span><br><span class="line"><span class="keyword">idiv</span> <span class="built_in">ecx</span></span><br><span class="line"><span class="keyword">mov</span> [<span class="built_in">ebp</span>+var_8], <span class="built_in">edx</span></span><br></pre></td></tr></table></figure>
+<h3 id="imul"><a href="#imul" class="headerlink" title="imul"></a>imul</h3><p><code>imul eax,ebx</code> =&gt; <code>eax = eax * ebx</code></p>
+<p><strong>只能操作32位一下的数据: rax/rbx不行</strong></p>
+<p>具体例子如下: 将字符串数字转化成 数字</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">repeat:</span></span><br><span class="line">    <span class="keyword">movsx</span> <span class="built_in">rbx</span>, <span class="built_in">byte</span>[<span class="built_in">rdx</span>+<span class="built_in">r8</span>]</span><br><span class="line">    <span class="keyword">cmp</span> <span class="built_in">rbx</span>, <span class="number">0</span></span><br><span class="line">    <span class="keyword">jz</span> over</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">eax</span>, <span class="number">0xa</span>				<span class="comment">;32bit</span></span><br><span class="line">    <span class="keyword">imul</span> <span class="built_in">r9d</span>, <span class="built_in">eax</span>			<span class="comment">;32bit</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">sub</span> <span class="built_in">rbx</span>, <span class="number">0x30</span></span><br><span class="line">    <span class="keyword">add</span> <span class="built_in">r9</span>,<span class="built_in">rbx</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">inc</span> <span class="built_in">r8</span></span><br><span class="line">    <span class="keyword">jmp</span> repeat              <span class="comment">; if not done counting keep going</span></span><br></pre></td></tr></table></figure>
+<h2 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h2><h3 id="cmp"><a href="#cmp" class="headerlink" title="cmp"></a>cmp</h3><h2 id="跳转"><a href="#跳转" class="headerlink" title="跳转"></a>跳转</h2><p><img src="/2018/01/05/汇编常见语句整理/jmp.png" alt></p>
+<h3 id="标志位-ZF"><a href="#标志位-ZF" class="headerlink" title="标志位 ZF"></a>标志位 ZF</h3><p>若ZF=1(表示本次运算结果为0，不为0则ZF=0)</p>
 <p>例如 <code>cmp eax, ebx</code> 其实是<code>eax-ebx</code>, 相同则表示运算结果为0 -&gt; 标志位<code>ZF=1</code><br><br>例如 <code>test eax, eax</code> 其实是判断eax是否为0, 相同则表示运算结果为0 -&gt; 标志位<code>ZF=1</code><br></p>
-<h3 id="jnz-jz"><a href="#jnz-jz" class="headerlink" title="jnz/jz"></a>jnz/jz</h3><p>jz=jump if zero，即零标志为1就跳转，一般与cmp连用，用以判断两数是否相等(相等就跳)。jz的另一种写法就是je，je=jump if equal，jz和je的作用是完全一样的。<br>JZ是累加器A判零条件转移指令。</p>
+<h3 id="jnz-jz"><a href="#jnz-jz" class="headerlink" title="jnz/jz"></a>jnz/jz</h3><p>jz=jump if zero，即零标志为1就跳转，一般与cmp连用，用以判断两数是否相等(相等就跳)。<br>jz的另一种写法就是je，je=jump if equal，jz和je的作用是完全一样的。<br>JZ是累加器A判零条件转移指令。</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">当<span class="built_in">eax</span>=<span class="built_in">ebx</span>时, ZF=<span class="number">1</span> 跳转</span><br><span class="line"><span class="keyword">cmp</span> <span class="built_in">eax</span>, <span class="built_in">ebx</span></span><br><span class="line"><span class="keyword">jz</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">当eax=0时, ZF=1 跳转</span><br><span class="line">mov eax, 0</span><br><span class="line"><span class="keyword">test </span>eax, eax		; ZF &lt;- 1</span><br><span class="line">jz	; 跳转执行</span><br></pre></td></tr></table></figure>
 <h3 id="jle-je"><a href="#jle-je" class="headerlink" title="jle/je"></a>jle/je</h3><p>jump less e: <code>&lt;=</code> 执行跳转</p>
 <h3 id="jmp"><a href="#jmp" class="headerlink" title="jmp"></a>jmp</h3><p><code>jmp</code>机器码的知识:</p>
 <ol>
@@ -198,16 +221,20 @@
 <figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">004</span>A2FCE    ^ E9 <span class="number">072</span>BFEFF   jmp     <span class="number">00485</span>ADA </span><br><span class="line">======== ======== ======== ======== ======== </span><br><span class="line"><span class="number">485</span>ADA<span class="number">-4</span>A2FCE=  FFFE2B0C</span><br><span class="line"></span><br><span class="line">目标地址 - 原地址 = 机器码</span><br></pre></td></tr></table></figure>
 <p>这里只是指向当前指令的IP处,实际计算跳转地址要去掉当前指令的长度,当前的跳转指令需要5个字节,<code>FFFE2B0C-5=FFFE2B07</code></p>
 <p>所以这题的的计算 <code>EB 1D =&gt; 0x01003591 + 0x1D + 2 =  0x10035B0</code></p>
-<h2 id="运算-四则"><a href="#运算-四则" class="headerlink" title="运算 四则"></a>运算 四则</h2><h3 id="div-idiv-有符号-无符号"><a href="#div-idiv-有符号-无符号" class="headerlink" title="div/ idiv (有符号 无符号)"></a>div/ idiv (有符号 无符号)</h3><p><code>div rcx</code> =&gt; <code>rax/rcx, remainder move to the rdx</code></p>
-<h3 id="imul"><a href="#imul" class="headerlink" title="imul"></a>imul</h3><p><code>imul eax,ebx</code> =&gt; <code>eax = eax * ebx</code></p>
-<p><strong>只能操作32位一下的数据: rax/rbx不行</strong></p>
-<p>具体例子如下: 将字符串数字转化成 数字</p>
-<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">repeat:</span></span><br><span class="line">    <span class="keyword">movsx</span> <span class="built_in">rbx</span>, <span class="built_in">byte</span>[<span class="built_in">rdx</span>+<span class="built_in">r8</span>]</span><br><span class="line">    <span class="keyword">cmp</span> <span class="built_in">rbx</span>, <span class="number">0</span></span><br><span class="line">    <span class="keyword">jz</span> over</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">eax</span>, <span class="number">0xa</span>				<span class="comment">;32bit</span></span><br><span class="line">    <span class="keyword">imul</span> <span class="built_in">r9d</span>, <span class="built_in">eax</span>			<span class="comment">;32bit</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">sub</span> <span class="built_in">rbx</span>, <span class="number">0x30</span></span><br><span class="line">    <span class="keyword">add</span> <span class="built_in">r9</span>,<span class="built_in">rbx</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">inc</span> <span class="built_in">r8</span></span><br><span class="line">    <span class="keyword">jmp</span> repeat              <span class="comment">; if not done counting keep going</span></span><br></pre></td></tr></table></figure>
-<h2 id="8-16-32-64-大小转换"><a href="#8-16-32-64-大小转换" class="headerlink" title="8 16 32 64 大小转换"></a>8 16 32 64 大小转换</h2><h3 id="movsx"><a href="#movsx" class="headerlink" title="movsx"></a>movsx</h3><p>小扩展到大 padding 用 <code>0</code><br><code>movsx rbx, byte[rdx+r8]</code></p>
+<h3 id="call"><a href="#call" class="headerlink" title="call"></a>call</h3><h2 id="8-16-32-64-大小转换"><a href="#8-16-32-64-大小转换" class="headerlink" title="8 16 32 64 大小转换"></a>8 16 32 64 大小转换</h2><h3 id="movsx"><a href="#movsx" class="headerlink" title="movsx"></a>movsx</h3><p>小扩展到大 padding 用 <code>0</code><br><code>movsx rbx, byte[rdx+r8]</code></p>
 <h3 id="byte"><a href="#byte" class="headerlink" title="byte"></a>byte</h3><p><code>movsx rbx, byte[rdx+r8]</code> 取最低位(byte) 和 <code>movsx rax, al</code> 效果相同</p>
 <h3 id="qword"><a href="#qword" class="headerlink" title="qword"></a>qword</h3><p>一般用于取地址 地址是 四字 两个双字 32bit 8byte 如下图蓝色部分<img src="/2018/01/05/汇编常见语句整理/qword.png" alt></p>
 <p><code>mov eax qword [rdi+8]</code> 取 s[1] 到 eax</p>
-
+<h2 id="简单语句"><a href="#简单语句" class="headerlink" title="简单语句"></a>简单语句</h2><h3 id="if语句"><a href="#if语句" class="headerlink" title="if语句"></a>if语句</h3><p>逻辑很简单 和自己写的一样, 通过jnz和jmp跳过一小块代码来实现if分支.</p>
+<p>特点是有标志位置, 例如下图<img src="/2018/01/05/汇编常见语句整理/if.png" alt></p>
+<h3 id="for循环"><a href="#for循环" class="headerlink" title="for循环"></a>for循环</h3><p>特点是 有<strong>比较</strong>和<strong>自加</strong>, 例如下图是一个最简单的for的汇编代码<img src="/2018/01/05/汇编常见语句整理/for.png" alt></p>
+<h3 id="while循环"><a href="#while循环" class="headerlink" title="while循环"></a>while循环</h3><p>和for循环类似, 但少一个<strong>自加</strong>的过程. 整个循环结束的条件就是里面的cmp后的跳转. 特点是<strong>结尾是<code>jmp</code>, 中间有个比较跳转</strong><br><img src="/2018/01/05/汇编常见语句整理/while.png" alt></p>
+<h2 id="switch"><a href="#switch" class="headerlink" title="switch"></a>switch</h2><p>源代码就是三段 <code>case</code>+<code>default</code>. </p>
+<h3 id="if样式"><a href="#if样式" class="headerlink" title="if样式"></a>if样式</h3><p>特征标志是开头有<strong>三小块结构相同的比较跳转</strong>, 最后有一个<strong>jmp</strong>代表<code>default</code>. </p>
+<p>总体来说至少需要7行代码<br><img src="/2018/01/05/汇编常见语句整理/switch.png" alt></p>
+<h3 id="使用跳转表"><a href="#使用跳转表" class="headerlink" title="使用跳转表"></a>使用跳转表</h3><p>经常在庞大连续的switch中出现. 编译器自动优化的结果. 例如下面的例子, 有四个<code>case</code>+<code>default</code>.  相当于直接用case的值进行跳转到正确的语句块</p>
+<p>特征是 末尾有个<strong>跳转表的定义</strong>, 开头有对<strong>计数器的调整<code>sub</code></strong>, <strong><code>ja</code>命令比较大小</strong>和<strong>直接到跳转表里某条的跳转</strong><br><img src="/2018/01/05/汇编常见语句整理/switch2.png" alt><br>和if样式的switch结构相比, 不再是挨个对比是否和case相等, 而是直接把值变成偏移.</p>
+<h2 id="识别结构体"><a href="#识别结构体" class="headerlink" title="识别结构体"></a>识别结构体</h2>
       
 
       
@@ -328,7 +355,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#inc"><span class="toc-number">1.</span> <span class="toc-text">inc</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#判断-跳转"><span class="toc-number"></span> <span class="toc-text">判断 跳转</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#标志位-ZF"><span class="toc-number">1.</span> <span class="toc-text">标志位 ZF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jnz-jz"><span class="toc-number">2.</span> <span class="toc-text">jnz/jz</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jle-je"><span class="toc-number">3.</span> <span class="toc-text">jle/je</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jmp"><span class="toc-number">4.</span> <span class="toc-text">jmp</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运算-四则"><span class="toc-number"></span> <span class="toc-text">运算 四则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#div-idiv-有符号-无符号"><span class="toc-number">1.</span> <span class="toc-text">div/ idiv (有符号 无符号)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#imul"><span class="toc-number">2.</span> <span class="toc-text">imul</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-16-32-64-大小转换"><span class="toc-number"></span> <span class="toc-text">8 16 32 64 大小转换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#movsx"><span class="toc-number">1.</span> <span class="toc-text">movsx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#byte"><span class="toc-number">2.</span> <span class="toc-text">byte</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#qword"><span class="toc-number">3.</span> <span class="toc-text">qword</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#局部变量和全局变量"><span class="toc-number">1.</span> <span class="toc-text">局部变量和全局变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#算数操作"><span class="toc-number">2.</span> <span class="toc-text">算数操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#加减"><span class="toc-number">2.1.</span> <span class="toc-text">加减</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#inc"><span class="toc-number">2.2.</span> <span class="toc-text">inc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#取模-div-idiv-有符号-无符号"><span class="toc-number">2.3.</span> <span class="toc-text">取模/ div/ idiv (有符号 无符号)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#imul"><span class="toc-number">2.4.</span> <span class="toc-text">imul</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#比较"><span class="toc-number">3.</span> <span class="toc-text">比较</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#cmp"><span class="toc-number">3.1.</span> <span class="toc-text">cmp</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#跳转"><span class="toc-number">4.</span> <span class="toc-text">跳转</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#标志位-ZF"><span class="toc-number">4.1.</span> <span class="toc-text">标志位 ZF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jnz-jz"><span class="toc-number">4.2.</span> <span class="toc-text">jnz/jz</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jle-je"><span class="toc-number">4.3.</span> <span class="toc-text">jle/je</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jmp"><span class="toc-number">4.4.</span> <span class="toc-text">jmp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#call"><span class="toc-number">4.5.</span> <span class="toc-text">call</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-16-32-64-大小转换"><span class="toc-number">5.</span> <span class="toc-text">8 16 32 64 大小转换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#movsx"><span class="toc-number">5.1.</span> <span class="toc-text">movsx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#byte"><span class="toc-number">5.2.</span> <span class="toc-text">byte</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#qword"><span class="toc-number">5.3.</span> <span class="toc-text">qword</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#简单语句"><span class="toc-number">6.</span> <span class="toc-text">简单语句</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#if语句"><span class="toc-number">6.1.</span> <span class="toc-text">if语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#for循环"><span class="toc-number">6.2.</span> <span class="toc-text">for循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#while循环"><span class="toc-number">6.3.</span> <span class="toc-text">while循环</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#switch"><span class="toc-number">7.</span> <span class="toc-text">switch</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#if样式"><span class="toc-number">7.1.</span> <span class="toc-text">if样式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用跳转表"><span class="toc-number">7.2.</span> <span class="toc-text">使用跳转表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#识别结构体"><span class="toc-number">8.</span> <span class="toc-text">识别结构体</span></a></li></ol>
                     </div>
                 </span>
             </div>
@@ -452,11 +479,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">malware analysis</a>
+                <a href="javascript:void(0)" class="js-tag color4">IOT</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">IOT</a>
+                <a href="javascript:void(0)" class="js-tag color2">malware analysis</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -469,6 +496,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Reverse</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">reverse</a>
               </li>
              
               <li class="article-tag-list-item">
